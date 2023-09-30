@@ -71,6 +71,9 @@ flutter:
     - assets/images/rm.png
     - assets/images/sm.png
     - assets/images/nyk.png
+    - assets/images/login/google_icon.png
+    - assets/images/login/login_home.jpg
+    - assets/images/login/white_gradient.png
 
   #   - images/a_dot_ham.jpeg
 
