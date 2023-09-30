@@ -14,22 +14,35 @@ class _FollowElemState extends State<FollowElem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Stack(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
+                              // ClipRRect(
+                              //   borderRadius: BorderRadius.circular(50),
+                              //   child: Image.network(
+                              //     widget.image,
+                              //     width: 50,
+                              //     height: 50,
+                              //     fit: BoxFit.cover,
+                              //   ),
+                              // ),
+                              Container(
+                                width: 100,
+                                height: 80,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,                
+                                ),
+                                child: Image.asset(
                                   widget.image,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                               Positioned(
                                 bottom: -10,
                                 right: -10,
-                                child: IconButton(onPressed: (){},icon: const Icon(Icons.add_circle),color: const Color.fromARGB(255, 16, 163, 26),))
+                                
+                                child: IconButton(onPressed: (){},icon: const Icon(Icons.add_circle),color: Color.fromARGB(255, 15, 55, 10),))
                             ],
                           ),
                         );

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Level App',
       theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 25, 99, 36),
+        primaryColor: const Color.fromARGB(255, 15, 63, 23),
         primarySwatch: Colors.grey
       ),
       home:const  Nav(),
