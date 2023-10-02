@@ -30,9 +30,9 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: const Icon(
@@ -214,7 +214,7 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: AthletesCarouselWidget(),
+                        child: AthleteCarouselWidget(),
                       ),
                     ],
                   ),

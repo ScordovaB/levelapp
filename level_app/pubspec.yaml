@@ -31,13 +31,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_fonts: ^6.1.0
   provider: ^6.0.5
   carousel_slider: ^4.2.1
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +74,16 @@ flutter:
     - assets/images/login/google_icon.png
     - assets/images/login/login_home.jpg
     - assets/images/login/white_gradient.png
-
+    - assets/images/real-madrid-logo.png
+    - assets/images/espanyol-logo.png
+    - assets/images/rangers-fc-logo.png
+    - assets/images/Captura_de_pantalla_2023-09-27_161228.png
+    - assets/images/16538364434742.jpg
+    - assets/images/Captura_de_pantalla_2023-09-27_151324.png
+    - assets/images/Captura_de_pantalla_2023-09-27_151312.png
+    - assets/images/Captura_de_pantalla_2023-09-27_151259.png
+    - assets/images/Captura_de_pantalla_2023-09-27_151243.png
+    - assets/images/fmf-seleccion-de-mexico-logo-1.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

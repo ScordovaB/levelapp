@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'CarouselItem.dart';
 
-class TeamCarouselWidget extends StatelessWidget {
-  final model; // Reemplaza esto con la referencia a tu modelo si es necesario
-  const TeamCarouselWidget({super.key, this.model});
+class TeamCarouselWidget extends StatefulWidget {
+  const TeamCarouselWidget({super.key});
+
+  @override
+  State<TeamCarouselWidget> createState() => _TeamCarouselWidget();
+}
+
+class _TeamCarouselWidget extends State<TeamCarouselWidget> {
+
+  CarouselController? carouselController = CarouselController();
+  int carouselCurrentIndex1 = 1;
+  int height = 60;
+  double heightOut = 80;
 
   @override
   Widget build(BuildContext context) {
@@ -18,43 +28,43 @@ class TeamCarouselWidget extends StatelessWidget {
               context,
               'assets/images/fmf-seleccion-de-mexico-logo-1.png',
               'Selección Nacional Mexicana',
-              '../TeamProfile/TeamProfile.dart'
+              true
             ),
             buildItem(
               context,
               'assets/images/espanyol-logo.png',
               'RCD Espanyol',
-              '../TeamProfile/TeamProfile.dart'
+              true
             ),
             buildItem(
               context,
               'assets/images/real-madrid-logo.png',
               'Real Madrid',
-              '../TeamProfile/TeamProfile.dart'
+              true
             ),
             buildItem(
               context,
               'assets/images/rangers-fc-logo.png',
               'Rangers Football Club',
-              '../TeamProfile/TeamProfile.dart'
+              true
             ),
           ],
-          carouselController: model.carouselController1 ??= CarouselController(),
+          carouselController: carouselController,
           options: CarouselOptions(
-            initialPage: 1,
-            viewportFraction: 0.3,
-            disableCenter: true,
-            enlargeCenterPage: true,
-            enlargeFactor: 0.3,
-            enableInfiniteScroll: true,
-            scrollDirection: Axis.horizontal,
-            autoPlay: true,
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            autoPlayInterval: const Duration(milliseconds: 6000),
-            autoPlayCurve: Curves.linear,
-            pauseAutoPlayInFiniteScroll: true,
-            onPageChanged: (index, _) => model.carouselCurrentIndex1 = index,
-          ),
+          initialPage: 1,
+          viewportFraction: 0.3,
+          disableCenter: true,
+          enlargeCenterPage: true,
+          enlargeFactor: 0.3,
+          enableInfiniteScroll: true,
+          scrollDirection: Axis.horizontal,
+          autoPlay: true,
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          autoPlayInterval: Duration(milliseconds: 6000),
+          autoPlayCurve: Curves.linear,
+          pauseAutoPlayInFiniteScroll: true,
+          onPageChanged: (index, _) => carouselCurrentIndex1 = index,
+            ),
         ),
       ),
     );

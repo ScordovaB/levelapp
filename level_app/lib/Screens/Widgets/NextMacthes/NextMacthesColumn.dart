@@ -7,7 +7,7 @@ class NextMatchesColumn extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Row(
+        const Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -18,7 +18,7 @@ class NextMatchesColumn extends StatelessWidget {
                 child: Text(
                   'Next Matches',
                   style: TextStyle(
-                    fontSize: 24, // Adjust the font size here
+                    fontSize: 24, 
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -30,7 +30,7 @@ class NextMatchesColumn extends StatelessWidget {
                 'See all',
                 textAlign: TextAlign.end,
                 style: TextStyle(
-                  fontSize: 16, // Adjust the font size here
+                  fontSize: 16, 
                   color: Color(0xFB4B39EF),
                   fontWeight: FontWeight.bold,
                 ),
@@ -48,13 +48,13 @@ class NextMatchesColumn extends StatelessWidget {
                   team1Image: 'assets/images/real-madrid-logo.png',
                   team2Image: 'assets/images/espanyol-logo.png',
                 ),
-                SizedBox(height: 15), 
+                const SizedBox(height: 15), 
                 NextMatchContainer(
                   date: 'Mar, 3/10 10:30',
                   team1Image: 'assets/images/rangers-fc-logo.png',
                   team2Image: 'assets/images/real-madrid-logo.png',
                 ),
-                SizedBox(height: 15), 
+                const SizedBox(height: 15), 
                 NextMatchContainer(
                   date: 'Sat, 30/9 10:30',
                   team1Image: 'assets/images/real-madrid-logo.png',

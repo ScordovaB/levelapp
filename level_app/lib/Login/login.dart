@@ -5,6 +5,8 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/signup.dart';
 import 'package:level_app/Login/main.dart';
+import 'package:level_app/Screens/Profiles/UserProfile.dart';
+
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -143,7 +145,12 @@ class _LoginState extends State<Login> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Tu acción cuando se presione el botón
+                              Navigator.push(
+                              context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserProfileWidget(),
+                               ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green[800],

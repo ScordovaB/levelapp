@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/main.dart';
 //import 'package:google_fonts/google_fonts.dart';
+import 'package:level_app/Screens/Profiles/UserProfile.dart';
 
 class AppBarLevel extends StatelessWidget {
   const AppBarLevel({super.key});
@@ -43,7 +44,7 @@ class AppBarLevel extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginHome(title: "LoginHome"),
+                        builder: (context) => const UserProfileWidget(),
                       ),
                     );
                   },
