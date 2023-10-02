@@ -38,8 +38,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      top: true,
+      body: SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[

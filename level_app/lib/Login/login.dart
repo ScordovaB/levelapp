@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:level_app/Login/signup.dart';
 import 'package:level_app/Login/main.dart';
 import 'package:level_app/Screens/Profiles/UserProfile.dart';
+import 'package:level_app/navigation.dart';
 
 
 class Login extends StatefulWidget {
@@ -146,7 +147,8 @@ class _LoginState extends State<Login> {
                               Navigator.push(
                               context,
                                 MaterialPageRoute(
-                                  builder: (context) => UserProfileWidget(),
+                                  //builder: (context) => UserProfileWidget(),
+                                  builder: (context) => Nav(),
                                ),
                               );
                             },
@@ -165,6 +167,7 @@ class _LoginState extends State<Login> {
                                 color: Colors.white,
                               ),
                             ),
+                            
                           ),
                           SizedBox(height: 10.0),
                           Text(

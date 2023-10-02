@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:level_app/navigation.dart';
+//import 'package:level_app/navigation.dart';
+import 'package:level_app/Login/main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color.fromARGB(255, 15, 63, 23),
         primarySwatch: Colors.grey
       ),
-      home:const  Nav(),
+      home:const  LoginHome(title: "LoginHome"),
       debugShowCheckedModeBanner: false,
     );
   }

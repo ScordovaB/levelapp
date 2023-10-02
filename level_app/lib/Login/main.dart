@@ -64,16 +64,16 @@ class _LoginHomeState extends State<LoginHome> {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 20,
-                  left: 20,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
+                // Positioned(
+                //   top: 20,
+                //   left: 20,
+                //   child: IconButton(
+                //     icon: Icon(Icons.arrow_back, color: Colors.black),
+                //     onPressed: () {
+                //       Navigator.pop(context);
+                //     },
+                //   ),
+                // ),
               ],
             ),
             SizedBox(height: 20.0),
