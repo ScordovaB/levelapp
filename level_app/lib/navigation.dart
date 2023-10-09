@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:level_app/Screens/carousel_teams.dart';
-import 'package:level_app/Screens/home.dart';
+import 'package:level_app/Screens/Home/carousel_teams.dart';
+import 'package:level_app/Screens/Home/home.dart';
 
 class OBGreenPalette {
   static const MaterialColor kToDark = MaterialColor(
