@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:level_app/Screens/Events/event_home.dart';
 import 'package:level_app/Screens/Home/carousel_teams.dart';
 import 'package:level_app/Screens/Home/home.dart';
 
@@ -32,7 +33,7 @@ class _NavState extends State<Nav> {
   int _selectedPage = 0;
   final List<Widget> _pages = [
     const Home(),
-    const CarouselTeams(),
+    const EventHome(),
     const Home(),
     //Aqui se agregan la siguientes vistas
   ];
