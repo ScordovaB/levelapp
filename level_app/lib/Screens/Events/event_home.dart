@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:level_app/Screens/app_bar.dart';
+import 'package:level_app/Screens/Widgets/app_bar_home.dart';
 
 class EventHome extends StatefulWidget {
   const EventHome({super.key});
@@ -42,6 +42,7 @@ class _EventHomeState extends State<EventHome> {
       home: Scaffold(
           body: GestureDetector(
         child: Scaffold(
+          appBar: appBarHome(context),
           key: scaffoldKey,
           body: SafeArea(
               top: true,
@@ -49,14 +50,7 @@ class _EventHomeState extends State<EventHome> {
                 child: Center(
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
-                        child: AppBarLevel(),
-                      ),
-                      Divider(
-                        thickness: 2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      
                       Column(
                         children: [
                           const Text(

@@ -58,7 +58,7 @@ class _FollowElemState extends State<FollowElem> {
               child: IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.add_circle),
-                color: Color.fromARGB(255, 15, 55, 10),
+                color:Theme.of(context).colorScheme.primary //Color.fromARGB(255, 15, 55, 10),
               ))
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Import the Material package
+import 'package:level_app/Screens/settings.dart';
 import '../Widgets/Carousels/AthletesCarousel.dart';
 import '../Widgets/Carousels/TeamCarousel.dart';
 
@@ -129,6 +130,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                       ),
                       ElevatedButton( 
                         onPressed: () {
+                          Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=> const Settings()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor, 

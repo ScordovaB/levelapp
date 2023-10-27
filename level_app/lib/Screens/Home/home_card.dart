@@ -66,7 +66,6 @@ class _HomeCardState extends State<HomeCard> {
                     style: const TextStyle(
                       fontFamily: 'Outfit',
                       fontSize: 18,
-                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                 ),
@@ -76,7 +75,6 @@ class _HomeCardState extends State<HomeCard> {
               children: [
                  Icon(
                   Icons.access_time,
-                  color: Colors.black,
                   size: 20,
                 ),
                  Text("Hace 5 horas")

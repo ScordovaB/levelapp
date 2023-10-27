@@ -148,7 +148,7 @@ class _LoginState extends State<Login> {
                               context,
                                 MaterialPageRoute(
                                   //builder: (context) => UserProfileWidget(),
-                                  builder: (context) => Nav(),
+                                  builder: (context) => Nav(theme: Theme.of(context),),
                                ),
                               );
                             },
