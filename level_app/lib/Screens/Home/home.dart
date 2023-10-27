@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:level_app/Screens/app_bar.dart';
+//import 'package:level_app/Screens/Profiles/UserProfile.dart';
 //import 'package:level_app/Screens/Home/carousel_teams.dart';
 //import 'package:level_app/Screens/carousel_teams.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
+import 'package:level_app/Screens/Widgets/app_bar_home.dart';
 //import 'package:level_app/Screens/Widgets/Carousels/TeamCarousel.dart';
 
 class Home extends StatefulWidget {
@@ -35,12 +36,20 @@ class _HomeState extends State<Home> {
     "assets/images/espanyol-logo.png",
   ];
   List<List<String>> teamsNames = [
-
-    ["Seleccion Mexicana","assets/images/sm.png"],
-    ["Real Madrid","assets/images/rm.png"],
-    ["NY Yankees","assets/images/nyk.png",],
-    ["Rangers FC","assets/images/rangers-fc-logo.png",],
-    ["Espanyol","assets/images/espanyol-logo.png",]
+    ["Seleccion Mexicana", "assets/images/sm.png"],
+    ["Real Madrid", "assets/images/rm.png"],
+    [
+      "NY Yankees",
+      "assets/images/nyk.png",
+    ],
+    [
+      "Rangers FC",
+      "assets/images/rangers-fc-logo.png",
+    ],
+    [
+      "Espanyol",
+      "assets/images/espanyol-logo.png",
+    ]
   ];
 
   List<String> athletesImages = [
@@ -51,17 +60,30 @@ class _HomeState extends State<Home> {
     "assets/images/Captura_de_pantalla_2023-09-27_161300.png"
   ];
   List<List<String>> athletesNames = [
-    ["Neymar Jr","assets/images/neymar1.jpg",],
-    ["Cristiano Ronaldo","assets/images/ronaldo.jpg",],
-    ["Messi","assets/images/MESSI.jpeg",],
-    ["Courtois","assets/images/Captura_de_pantalla_2023-09-27_161228.png",],
-    ["Modric","assets/images/Captura_de_pantalla_2023-09-27_161300.png"]
+    [
+      "Neymar Jr",
+      "assets/images/neymar1.jpg",
+    ],
+    [
+      "Cristiano Ronaldo",
+      "assets/images/ronaldo.jpg",
+    ],
+    [
+      "Messi",
+      "assets/images/MESSI.jpeg",
+    ],
+    [
+      "Courtois",
+      "assets/images/Captura_de_pantalla_2023-09-27_161228.png",
+    ],
+    ["Modric", "assets/images/Captura_de_pantalla_2023-09-27_161300.png"]
   ];
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Scaffold(
+          appBar: appBarHome(context),
           key: scaffoldKey,
           body: SafeArea(
             top: true,
@@ -70,14 +92,14 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
-                    child: AppBarLevel(),
-                  ),
-                  Divider(
-                    thickness: 2,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  // const Padding(
+                  //   padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
+                  //   child: AppBarLevel(),
+                  // ),
+                  // Divider(
+                  //   thickness: 2,
+                  //   color: Theme.of(context).colorScheme.primary,
+                  // ),
                   Padding(
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 20, 15, 0),
@@ -89,7 +111,10 @@ class _HomeState extends State<Home> {
                           height:
                               300, //MediaQuery.sizeOf(context).height * 0.400,
                           decoration: BoxDecoration(
-                              color: const Color(0xFFD8D8D8),
+                              color: Theme.of(context).primaryColor.value ==
+                                      0xFF15571f
+                                  ? const Color(0xFFD8D8D8)
+                                  : Theme.of(context).cardColor,
                               boxShadow: const [
                                 BoxShadow(
                                   blurRadius: 4,
@@ -121,7 +146,6 @@ class _HomeState extends State<Home> {
                                     'Hot News!',
                                     style: GoogleFonts.ubuntu(
                                       fontSize: 18,
-                                      color: const Color.fromARGB(255, 0, 0, 0),
                                     ),
                                   ),
                                 ],
@@ -130,10 +154,9 @@ class _HomeState extends State<Home> {
                                 thickness: 3,
                                 color: Color(0xFF707070),
                               ),
-                              Expanded(
-                                  child: SizedBox(
+                              SizedBox(
                                 width: double.infinity,
-                                height: 500,
+                                height: 250,
                                 child: Stack(
                                   children: [
                                     Padding(
@@ -145,14 +168,14 @@ class _HomeState extends State<Home> {
                                         scrollDirection: Axis.horizontal,
                                         //reverse: true,
                                         children: const [
-                                          Expanded(
+                                          SizedBox(
                                             child: HomeCard(
                                                 image:
                                                     "assets/images/neymar1.jpg",
                                                 text:
                                                     "Neymar breaks Pele's record for Brazil!"),
                                           ),
-                                          Expanded(
+                                          SizedBox(
                                             child: HomeCard(
                                                 image:
                                                     "assets/images/neymar2.jpg",
@@ -171,7 +194,7 @@ class _HomeState extends State<Home> {
                                       right: 0,
                                       height: 20,
                                       child: Container(
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
@@ -181,16 +204,17 @@ class _HomeState extends State<Home> {
                                                 CircleAvatar(
                                                   radius: 5,
                                                   backgroundColor:
-                                                      Color.fromARGB(
-                                                          255, 15, 63, 23),
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 5,
                                             ),
                                             // Second Row child
-                                            Row(
+                                            const Row(
                                               children: [
                                                 CircleAvatar(
                                                   radius: 5,
@@ -204,7 +228,7 @@ class _HomeState extends State<Home> {
                                     )
                                   ],
                                 ),
-                              ))
+                              )
                             ],
                           ),
                         )
@@ -219,21 +243,25 @@ class _HomeState extends State<Home> {
                     child: Container(
                       width: double.infinity,
                       height: 125, //MediaQuery.sizeOf(context).height * 0.140,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD8D8D8),
-                        boxShadow: [
+                      decoration: BoxDecoration(
+                        color:
+                            Theme.of(context).primaryColor.value == 0xFF15571f
+                                ? const Color(0xFFD8D8D8)
+                                : Theme.of(context).cardColor,
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 4,
                             color: Color(0x33000000),
                             offset: Offset(0, 8),
                           )
                         ],
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         shape: BoxShape.rectangle,
                       ),
                       child: Column(children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 5, 0, 10),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 0, 10),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -241,7 +269,8 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
-                                  color: Color.fromARGB(255, 63, 63, 63)),
+                                  color:
+                                      Theme.of(context).unselectedWidgetColor),
                             ),
                           ),
                         ),
@@ -254,7 +283,10 @@ class _HomeState extends State<Home> {
                               children:
                                   List.generate(athletesImages.length, (index) {
                                 String item = athletesImages[index];
-                                return FollowElem(image: item, list: athletesNames[index],);
+                                return FollowElem(
+                                  image: item,
+                                  list: athletesNames[index],
+                                );
                               }),
                             ),
                           ),
@@ -267,21 +299,25 @@ class _HomeState extends State<Home> {
                     child: Container(
                       width: double.infinity,
                       height: 125,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD8D8D8),
-                        boxShadow: [
+                      decoration: BoxDecoration(
+                        color:
+                            Theme.of(context).primaryColor.value == 0xFF15571f
+                                ? const Color(0xFFD8D8D8)
+                                : Theme.of(context).cardColor,
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 4,
                             color: Color(0x33000000),
                             offset: Offset(0, 8),
                           )
                         ],
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         shape: BoxShape.rectangle,
                       ),
                       child: Column(children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 5, 0, 10),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 0, 10),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -289,7 +325,8 @@ class _HomeState extends State<Home> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
-                                  color: Color.fromARGB(255, 63, 63, 63)),
+                                  color:
+                                      Theme.of(context).unselectedWidgetColor),
                             ),
                           ),
                         ),
@@ -304,7 +341,8 @@ class _HomeState extends State<Home> {
                               children:
                                   List.generate(teamsImages.length, (index) {
                                 String item = teamsImages[index];
-                                return FollowElem(image: item, list: teamsNames[index]);
+                                return FollowElem(
+                                    image: item, list: teamsNames[index]);
                               }),
                             ),
                           ),
