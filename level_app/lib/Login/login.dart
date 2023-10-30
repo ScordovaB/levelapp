@@ -6,7 +6,6 @@ import 'package:level_app/Login/main.dart';
 import 'package:level_app/Screens/Profiles/UserProfile.dart';
 import 'package:level_app/navigation.dart';
 
-
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -91,7 +90,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       Text(
-                        "Enter your credentials.",
+                        "Enter your credentials",
                         style: TextStyle(
                           fontSize: 12.0,
                           color: Colors.black,
@@ -139,17 +138,18 @@ class _LoginState extends State<Login> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 22.0),
+                      SizedBox(height: 26.0),
                       Column(
                         children: [
                           ElevatedButton(
                             onPressed: () {
                               Navigator.push(
-                              context,
+                                context,
                                 MaterialPageRoute(
-                                  //builder: (context) => UserProfileWidget(),
-                                  builder: (context) => Nav(theme: Theme.of(context),),
-                               ),
+                                  builder: (context) => Nav(
+                                    theme: Theme.of(context),
+                                  ),
+                                ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -158,63 +158,32 @@ class _LoginState extends State<Login> {
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               padding: EdgeInsets.symmetric(
-                                  vertical: 17.0, horizontal: 65.0),
-                            ),
-                            child: Text(
-                              'LOG IN',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white,
+                                vertical: 19.0,
                               ),
                             ),
-                            
-                          ),
-                          SizedBox(height: 10.0),
-                          Text(
-                            'Or log in with',
-                            style: TextStyle(fontSize: 11.5),
-                          ),
-                          SizedBox(height: 10.0),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.g_translate_outlined,
-                              color: Colors.black,
-                              size: 14.0,
-                            ),
-                            label: Text('Log in with Google',
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.black,
-                                )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 17.0, horizontal: 33.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Icon(
+                                    Icons.login,
+                                    size: 17.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 10.0),
+                                Text(
+                                  'LOG IN',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(height: 10.0),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(Icons.facebook_outlined, size: 14.0),
-                            label: Text('Log in with Facebook',
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.white,
-                                )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.blue[900],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 17.5, horizontal: 27.0),
-                            ),
-                          ),
-                          SizedBox(height: 25.0),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
