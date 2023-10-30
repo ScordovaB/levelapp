@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:level_app/navigation.dart';
+//import 'package:level_app/navigation.dart';
+import 'package:level_app/Login/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:level_app/theme/bloc/theme_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(BlocProvider(
+    create: (context) => ThemeBloc(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,14 +16,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Level App',
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 15, 63, 23),
-        primarySwatch: Colors.grey
-      ),
-      home:const  Nav(),
-      debugShowCheckedModeBanner: false,
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp(
+          title: 'Level App',
+          theme: state.themeData,
+          home: const  LoginHome(title: "LoginHome"),
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 }

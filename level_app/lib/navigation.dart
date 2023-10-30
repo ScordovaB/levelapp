@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:level_app/Screens/carousel_teams.dart';
-import 'package:level_app/Screens/home.dart';
+import 'package:level_app/Screens/Events/event_home.dart';
+import 'package:level_app/Screens/Home/home.dart';
 
 class OBGreenPalette {
   static const MaterialColor kToDark = MaterialColor(
@@ -22,7 +22,9 @@ class OBGreenPalette {
 
 
 class Nav extends StatefulWidget {
-  const Nav({super.key});
+  final ThemeData theme; // Add a theme parameter
+
+  const Nav({super.key, required this.theme});
 
   @override
   State<Nav> createState() => _NavState();
@@ -32,7 +34,7 @@ class _NavState extends State<Nav> {
   int _selectedPage = 0;
   final List<Widget> _pages = [
     const Home(),
-    const CarouselTeams(),
+    const EventHome(),
     const Home(),
     //Aqui se agregan la siguientes vistas
   ];
@@ -40,11 +42,14 @@ class _NavState extends State<Nav> {
 
   @override
   Widget build(BuildContext context) {
+
+    //ThemeData fullTheme = Theme.of(context);
+    
     return MaterialApp(
       title: 'Level App',
       theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 21, 87, 31),
-        primarySwatch: OBGreenPalette.kToDark
+        primaryColor: widget.theme.primaryColor,
+        colorScheme: widget.theme.colorScheme,
       ),
       home: Scaffold(
       
@@ -62,6 +67,9 @@ class _NavState extends State<Nav> {
             BottomNavigationBarItem(icon: Icon(Icons.sports_hockey), label: 'Vs'),
             BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: 'Followed'),
           ],
+          backgroundColor: widget.theme.colorScheme.background,
+          selectedItemColor: widget.theme.colorScheme.primary,
+          unselectedItemColor: widget.theme.unselectedWidgetColor,
         ),
       ),
       debugShowCheckedModeBanner: false,
