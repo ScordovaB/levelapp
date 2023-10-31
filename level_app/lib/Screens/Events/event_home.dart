@@ -54,7 +54,7 @@ class _EventHomeState extends State<EventHome> {
                         children: [Container(), Container()],
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 25, 0, 10),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             foregroundColor: Theme.of(context).primaryColor,
@@ -72,44 +72,84 @@ class _EventHomeState extends State<EventHome> {
                         ),
                       ),
                       SizedBox(height: 10.0),
+                      Stack(children: [
+                        Container(
+                          height: 30.0,
+                          width: MediaQuery.of(context).size.width / 1.15,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            border: Border(
+                              left: BorderSide(
+                                color: Colors.black,
+                                width: 5.0,
+                              ),
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                  15.0), // Redondea la esquina superior izquierda
+                              topRight: Radius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 2,
+                          left: 0,
+                          right: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Text(
+                              '30/10/2023 18:00',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ]),
                       Container(
-                        height: 130.0,
+                        height: 90.0,
                         width: MediaQuery.of(context).size.width / 1.15,
                         decoration: BoxDecoration(
                           color: Colors.green.withOpacity(0.25),
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                                15.0), // Redondea la esquina superior izquierda
+                            bottomRight: Radius.circular(15.0),
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Icon(
                                 Icons.emoji_events,
-                                size: 40.0,
+                                size: 50.0,
                               ),
                             ),
                             // Agrega el resto de tus iconos o widgets aquí
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(0.0),
                               child: Icon(
-                                Icons.star,
-                                size: 40.0,
+                                Icons.sports_baseball,
+                                size: 50.0,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Image.asset(
-                                'assets/images/vs.jpg', // Reemplaza con la ruta de tu imagen
-                                width: 40.0,
-                                height: 40.0,
+                              padding: const EdgeInsets.all(0.0),
+                              child: Icon(
+                                Icons.sports_hockey_rounded,
+                                size: 80.0,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Icon(
-                                Icons.emoji_events,
-                                size: 40.0,
+                                Icons.sports_basketball_outlined,
+                                size: 50.0,
                               ),
                             ),
                           ],
