@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
                     height: 110.0,
                     width: MediaQuery.of(context).size.width / 1.25,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.green.withOpacity(0.25),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(
                             16.0), // Redondea la esquina superior izquierda
@@ -58,6 +58,7 @@ class _LoginState extends State<Login> {
                         style: TextStyle(
                           fontSize: 32.0,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -72,7 +73,7 @@ class _LoginState extends State<Login> {
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.green.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: const Offset(0, 3),
@@ -164,14 +165,6 @@ class _LoginState extends State<Login> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Icon(
-                                    Icons.login,
-                                    size: 17.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
                                 SizedBox(width: 10.0),
                                 Text(
                                   'LOG IN',

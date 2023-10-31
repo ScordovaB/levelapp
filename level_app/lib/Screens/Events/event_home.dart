@@ -50,48 +50,71 @@ class _EventHomeState extends State<EventHome> {
                 child: Center(
                   child: Column(
                     children: [
-                      
                       Column(
-                        children: [
-                          const Text(
-                            "WATCH NOW",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 30,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                color: const Color(0xFFD8D8D8),
-                                shape: BoxShape.rectangle,
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1,
-                                )),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [],
-                            ),
-                          ),
-                          Container()
-                        ],
+                        children: [Container(), Container()],
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         child: TextButton(
                           style: TextButton.styleFrom(
                             foregroundColor: Theme.of(context).primaryColor,
                             side: BorderSide(
                               color: Theme.of(context).primaryColor,
-                              width: 2.0,
+                              width: 4.0,
                             ),
                           ),
                           onPressed: () {
                             // Add your onPressed action here
                           },
-                          child: const Text('Full Calendar'),
+                          child: const Text('Full Calendar',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 25.0)),
                         ),
                       ),
+                      SizedBox(height: 10.0),
+                      Container(
+                        height: 130.0,
+                        width: MediaQuery.of(context).size.width / 1.15,
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.25),
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.emoji_events,
+                                size: 40.0,
+                              ),
+                            ),
+                            // Agrega el resto de tus iconos o widgets aquí
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.star,
+                                size: 40.0,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Image.asset(
+                                'assets/images/vs.jpg', // Reemplaza con la ruta de tu imagen
+                                width: 40.0,
+                                height: 40.0,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.emoji_events,
+                                size: 40.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),

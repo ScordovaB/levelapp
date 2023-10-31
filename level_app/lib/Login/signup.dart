@@ -37,7 +37,7 @@ class _SignUpState extends State<SignUp> {
                     height: 110.0,
                     width: MediaQuery.of(context).size.width / 1.25,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.green.withOpacity(0.25),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(
                             16.0), // Redondea la esquina superior izquierda
@@ -57,6 +57,7 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(
                           fontSize: 32.0,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -71,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.green.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: const Offset(0, 3),
