@@ -7,11 +7,11 @@ class NextMatchesColumn extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        const Row(
+        Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
+            const Align(
               alignment: AlignmentDirectional(-1.00, 0.00),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 10),
@@ -25,13 +25,13 @@ class NextMatchesColumn extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
               child: Text(
                 'See all',
                 textAlign: TextAlign.end,
                 style: TextStyle(
                   fontSize: 16, 
-                  color: Color(0xFB4B39EF),
+                  color: Theme.of(context).hintColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

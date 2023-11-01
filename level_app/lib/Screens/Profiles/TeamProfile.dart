@@ -2,9 +2,12 @@ import 'package:level_app/Screens/Widgets/Carousels/AthletesCarousel.dart';
 import 'package:flutter/material.dart';
 import '../Widgets/News/NewsContainer.dart';
 import '../Widgets/NextMacthes/NextMacthesColumn.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class TeamProfileWidget extends StatefulWidget {
-  const TeamProfileWidget({Key? key}) : super(key: key);
+  int id = 0;
+  TeamProfileWidget({super.key, required this.id});
 
   @override
   _TeamProfileWidgetState createState() => _TeamProfileWidgetState();
@@ -14,9 +17,33 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  List _myTeam = [];
+  List _allTeams = [];
+
+  Future<void> readJson(int id) async {
+    final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
+    final data = await json.decode(response);
+    setState(() {
+      _allTeams = data["teams"];
+      _myTeam = getTeam(id, _allTeams);
+    });
+  }
+
+  List getTeam(id, teamsData){
+    List myTeams = [];
+    for (var i = 0; i < teamsData.length; i++) {
+      if(id == teamsData[i]["id"]) {
+        myTeams.add(teamsData[i]);
+        return myTeams;
+      }
+    }
+    return myTeams;
+  }
+
   @override
   void initState() {
     super.initState();
+    readJson(widget.id);
   }
 
   @override
@@ -30,9 +57,9 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: const Icon(
@@ -46,7 +73,7 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
           ),
           title: Text(
             'Team Profile',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [],
           centerTitle: false,
@@ -66,12 +93,12 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                       Container(
                         width: double.infinity,
                         height: 124,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: Colors.greenAccent,
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              'https://images.unsplash.com/photo-1522778034537-20a2486be803?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkfGVufDB8fHx8MTY5NTg1MjY0Nnww&ixlib=rb-4.0.3&q=80&w=1080',
+                              _myTeam[0]["background"],
                             ),
                           ),
                         ),
@@ -91,9 +118,9 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                             ),
-                            child: Image.asset(
-                              'assets/images/real-madrid-logo.png',
-                              fit: BoxFit.contain,
+                            child: Image.network(
+                              _myTeam[0]["profile"], 
+                              fit: BoxFit.cover, 
                             ),
                           ),
                         ),
@@ -115,10 +142,10 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Real Madrid FC',
-                                style: Theme.of(context).textTheme.headline5,
+                                _myTeam[0]["name"],
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
-                              const Row(
+                              Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -126,13 +153,14 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                                     'Soccer Team',
                                     style: TextStyle(
                                       fontFamily: 'Readex Pro',
-                                      color: Color(0xFF3299E7),
+                                      color: Theme.of(context).primaryColorLight,
                                       fontSize: 18,
+                                      fontWeight: FontWeight.bold
                                     ),
                                   ),
                                   Icon(
                                     Icons.sports_soccer,
-                                    color: Color(0xFF3299E7),
+                                    color: Theme.of(context).primaryColorLight,
                                     size: 24,
                                   ),
                                 ],
@@ -141,18 +169,18 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                                 onPressed: () {
                                   print('Button pressed ...');
                                 },
-                                child: const Text(
-                                  'Follow',
-                                  style: TextStyle(
-                                    fontFamily: 'Readex Pro',
-                                    color: Colors.white,
-                                  ),
-                                ),
                                 style: ElevatedButton.styleFrom(
-                                  primary: const Color(0xFF4B39EF),
+                                  backgroundColor: Theme.of(context).hintColor,
                                   elevation: 3,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Follow',
+                                  style: TextStyle(
+                                    fontFamily: 'Readex Pro',
+                                    color: Theme.of(context).scaffoldBackgroundColor,
                                   ),
                                 ),
                               ),
@@ -170,7 +198,7 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 10),
                       child: Text(
                         'Latest News',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
                   ],
@@ -190,17 +218,17 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                       padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Athletes',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
                       child: Text(
                         'See all',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           fontFamily: 'Readex Pro',
-                          color: Color(0xFB4B39EF),
+                          color: Theme.of(context).hintColor,
                         ),
                       ),
                     ),
@@ -210,11 +238,11 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                   width: double.infinity,
                   height: 141,
                   decoration: const BoxDecoration(),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: AthleteCarouselWidget(),
+                        child: AthleteCarouselWidget(athletes: _myTeam[0]["athletes"]),
                       ),
                     ],
                   ),

@@ -22,14 +22,14 @@ class _CarouselTeamsState extends State<CarouselTeams> {
       height: heightOut,
       child: CarouselSlider(
         items: [
-          buildItem(context, 'assets/images/fmf-seleccion-de-mexico-logo-1.png',
-              'Selección Nacional Mexicana', true),
-          buildItem(
-              context, 'assets/images/espanyol-logo.png', 'RCD Espanyol', true),
-          buildItem(context, 'assets/images/real-madrid-logo.png',
-              'Real Madrid', true),
-          buildItem(context, 'assets/images/rangers-fc-logo.png',
-              'Rangers Football Club', true),
+          // buildItem(context, 'assets/images/fmf-seleccion-de-mexico-logo-1.png',
+          //     'Selección Nacional Mexicana', true),
+          // buildItem(
+          //     context, 'assets/images/espanyol-logo.png', 'RCD Espanyol', true),
+          // buildItem(context, 'assets/images/real-madrid-logo.png',
+          //     'Real Madrid', true),
+          // buildItem(context, 'assets/images/rangers-fc-logo.png',
+          //     'Rangers Football Club', true),
         ],
         carouselController: carouselController,
         options: CarouselOptions(

@@ -26,7 +26,7 @@ final appThemeData = {
   AppTheme.GreenDark: ThemeData(
     primaryColor: const Color.fromARGB(255, 17, 68, 24),
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromARGB(255, 17, 68, 24)!,
+      seedColor: const Color.fromARGB(255, 17, 68, 24),
       brightness: Brightness.dark,
     ),
     dividerColor: Colors.green,

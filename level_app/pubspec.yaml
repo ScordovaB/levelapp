@@ -88,6 +88,8 @@ flutter:
     - assets/images/Captura_de_pantalla_2023-09-27_151243.png
     - assets/images/Captura_de_pantalla_2023-09-27_161300.png
     - assets/images/fmf-seleccion-de-mexico-logo-1.png
+    - assets/testing_data/user_data.json
+    - assets/testing_data/sport_data.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
