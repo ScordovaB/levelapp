@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Import the Material package
+import 'package:level_app/Screens/settings.dart';
 import '../Widgets/Carousels/AthletesCarousel.dart';
 import '../Widgets/Carousels/TeamCarousel.dart';
 
@@ -23,14 +24,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Theme.of(context).primaryTextTheme.bodyText1!.color, 
+              color: Colors.black, 
               size: 30,
             ),
             onPressed: () async {
@@ -60,7 +61,6 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         width: double.infinity,
                         height: 140,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor,
                           image: const DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
@@ -76,13 +76,6 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           child: Container(
                             width: 90,
                             height: 90,
-                            decoration: BoxDecoration(
-                              color: Colors.greenAccent,
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 4,
-                              ),
-                            ),
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                               child: ClipRRect(
@@ -105,14 +98,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
                   child: Text(
                     'Andrew D.',
-                    style: Theme.of(context).textTheme.titleMedium, 
+                    style: TextStyle(fontSize: 25), 
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
                   child: Text(
                     'andrew@domainname.com',
-                    style: Theme.of(context).textTheme.headlineSmall, 
+                    style: TextStyle(fontSize: 15),  
                   ),
                 ),
                 Padding(
@@ -121,7 +114,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton( // Use Material ElevatedButton
+                      ElevatedButton( 
                         onPressed: () {
                         },
                         style: ElevatedButton.styleFrom(
@@ -132,11 +125,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         ),
                         child: Text(
                           'Edit Profile',
-                          style: Theme.of(context).textTheme.bodyText1, 
+                          style: TextStyle(fontSize: 15, color: Colors.white), 
                         ),
                       ),
                       ElevatedButton( 
                         onPressed: () {
+                          Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=> const Settings()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor, 
@@ -146,7 +142,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         ),
                         child: Text(
                           'Settings',
-                          style: Theme.of(context).textTheme.bodyLarge, 
+                          style: TextStyle(fontSize: 15, color: Colors.white), 
                         ),
                       ),
                     ],
@@ -228,7 +224,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         child: Container(
                           width: double.infinity,
                           height: 149,
-                          child: const AthletesCarouselWidget()
+                          child: const AthleteCarouselWidget()
                         ),
                       ),
                     ],

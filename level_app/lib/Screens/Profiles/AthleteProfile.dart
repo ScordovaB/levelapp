@@ -29,9 +29,9 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: IconButton(
             icon: Icon(
@@ -224,43 +224,6 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                   height: 258,
                   decoration: BoxDecoration(),
                   child: NextMatchesColumn(),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
-                      child: Text(
-                        'Athletes',
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
-                      child: Text(
-                        'See all',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontFamily: 'Readex Pro',
-                          color: Color(0xFB4B39EF),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 141,
-                  decoration: BoxDecoration(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: AthletesCarouselWidget(),
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),

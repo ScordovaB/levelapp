@@ -24,9 +24,9 @@ class NextMatchContainer extends StatelessWidget {
       child: Stack(
         children: [
           Align(
-            alignment: AlignmentDirectional(-0.32, -1.17),
+            alignment: AlignmentDirectional(-0.4, -1.17),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(8, 10, 0, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
               child: Text(
                 date,
                 style: TextStyle(
@@ -79,10 +79,9 @@ class NextMatchContainer extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: AlignmentDirectional(0.88, 0.21),
+            alignment: AlignmentDirectional(0.88, -0.08),
             child: ElevatedButton(
               onPressed: () {
-                print('Button pressed ...');
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.greenAccent,
@@ -95,8 +94,7 @@ class NextMatchContainer extends StatelessWidget {
               child: Text(
                 'More Info',
                 style: TextStyle(
-                  fontSize: 16, // Adjust the font size here
-                  color: Colors.white,
+                  fontSize: 16, 
                   fontWeight: FontWeight.bold,
                 ),
               ),
