@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 //import 'package:level_app/Screens/Profiles/UserProfile.dart';
-//import 'package:level_app/Screens/Home/carousel_teams.dart';
-//import 'package:level_app/Screens/carousel_teams.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';

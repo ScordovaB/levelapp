@@ -81,13 +81,17 @@ flutter:
     - assets/images/espanyol-logo.png
     - assets/images/rangers-fc-logo.png
     - assets/images/Captura_de_pantalla_2023-09-27_161228.png
+    - assets/images/Captura_de_pantalla_2023-09-27_1612208.png
     - assets/images/16538364434742.jpg
     - assets/images/Captura_de_pantalla_2023-09-27_151324.png
     - assets/images/Captura_de_pantalla_2023-09-27_151312.png
     - assets/images/Captura_de_pantalla_2023-09-27_151259.png
     - assets/images/Captura_de_pantalla_2023-09-27_151243.png
     - assets/images/Captura_de_pantalla_2023-09-27_161300.png
+    - assets/images/lakers.png
     - assets/images/fmf-seleccion-de-mexico-logo-1.png
+    - lib/Screens/Search/profiles.json 
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
