@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Import the Material package
+import 'package:level_app/Screens/Profiles/edit_profile.dart';
 import 'package:level_app/Screens/settings.dart';
 import '../Widgets/Carousels/AthletesCarousel.dart';
 import '../Widgets/Carousels/TeamCarousel.dart';
@@ -11,8 +12,10 @@ class UserProfileWidget extends StatefulWidget {
 }
 
 class _UserProfileWidgetState extends State<UserProfileWidget> {
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String username = 'Andrew D.';
+  String bio = '';
+  String email = 'andrew@domainname.com';
 
   @override
   void dispose() {
@@ -31,16 +34,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_rounded,
-              color: Colors.black, 
+              color: Colors.black,
               size: 30,
             ),
             onPressed: () async {
-              Navigator.of(context).pop(); 
+              Navigator.of(context).pop();
             },
           ),
           title: Text(
             'My Profile',
-            style: Theme.of(context).textTheme.headline6, 
+            style: Theme.of(context).textTheme.headline6,
           ),
           actions: [],
           centerTitle: false,
@@ -72,12 +75,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                       Align(
                         alignment: const AlignmentDirectional(-1.00, 1.00),
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 16),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24, 0, 0, 16),
                           child: Container(
                             width: 90,
                             height: 90,
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  4, 4, 4, 4),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
@@ -97,15 +102,15 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
                   child: Text(
-                    'Andrew D.',
-                    style: TextStyle(fontSize: 25), 
+                    username,
+                    style: TextStyle(fontSize: 25),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
                   child: Text(
-                    'andrew@domainname.com',
-                    style: TextStyle(fontSize: 15),  
+                    email,
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
                 Padding(
@@ -114,35 +119,48 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton( 
+                      ElevatedButton(
                         onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile(
+                                        onSave: (publicName, bio, email) {
+                                          setState(() {
+                                            username = publicName;
+                                            this.bio = bio;
+                                            this.email = email;
+                                          });
+                                        },
+                                      )));
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor, 
+                          primary: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(38),
                           ),
                         ),
                         child: Text(
                           'Edit Profile',
-                          style: TextStyle(fontSize: 15, color: Colors.white), 
+                          style: TextStyle(fontSize: 15, color: Colors.white),
                         ),
                       ),
-                      ElevatedButton( 
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context)=> const Settings()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Settings()));
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor, 
+                          backgroundColor: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(38),
                           ),
                         ),
                         child: Text(
                           'Settings',
-                          style: TextStyle(fontSize: 15, color: Colors.white), 
+                          style: TextStyle(fontSize: 15, color: Colors.white),
                         ),
                       ),
                     ],
@@ -153,10 +171,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Teams',
-                        style: Theme.of(context).textTheme.subtitle2, 
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
                     const Padding(
@@ -181,10 +200,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Expanded(
                         child: Container(
-                          width: double.infinity,
-                          height: 149,
-                          child: const TeamCarouselWidget()
-                        ),
+                            width: double.infinity,
+                            height: 149,
+                            child: const TeamCarouselWidget()),
                       ),
                     ],
                   ),
@@ -194,10 +212,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Athletes',
-                        style: Theme.of(context).textTheme.subtitle2, 
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ),
                     const Padding(
@@ -222,10 +241,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     children: [
                       Expanded(
                         child: Container(
-                          width: double.infinity,
-                          height: 149,
-                          child: const AthleteCarouselWidget()
-                        ),
+                            width: double.infinity,
+                            height: 149,
+                            child: const AthleteCarouselWidget()),
                       ),
                     ],
                   ),

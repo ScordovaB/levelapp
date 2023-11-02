@@ -47,7 +47,7 @@ class _HomeCardState extends State<HomeCard> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
+                    child: Image.network(
                       widget.image,
                       width: 170,
                       height: 150,
