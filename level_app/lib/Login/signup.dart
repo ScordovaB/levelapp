@@ -3,6 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/main.dart';
+import 'package:level_app/Login/termsAndConditions.dart';
+import 'package:level_app/navigation.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/gestures.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -12,6 +16,25 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  Future<void> checkPermission(
+      Permission permission, BuildContext context) async {
+    final status = await permission.request();
+    print(status);
+    if (status.isGranted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Permission granted")));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Nav(
+            theme: Theme.of(context),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +48,7 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 30.0),
+          margin: const EdgeInsets.only(top: 20.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: 16.0), // Espacio en los lados
@@ -36,12 +59,10 @@ class _SignUpState extends State<SignUp> {
                     height: 110.0,
                     width: MediaQuery.of(context).size.width / 1.25,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.green.withOpacity(0.25),
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                            16.0), // Redondea la esquina superior izquierda
-                        topRight: Radius.circular(
-                            16.0), // Redondea la esquina superior derecha
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
                       ),
                     ),
                   ),
@@ -56,6 +77,7 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(
                           fontSize: 32.0,
                           color: Colors.black,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -63,14 +85,13 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ]),
                 Container(
-                  padding:
-                      const EdgeInsets.all(30.0), // Espacio en todos los lados
+                  padding: const EdgeInsets.all(30.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.green.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: const Offset(0, 3),
@@ -158,11 +179,46 @@ class _SignUpState extends State<SignUp> {
                         ],
                       ),
                       SizedBox(height: 22.0),
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10.0,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  'When creating your account, you accept the ',
+                            ),
+                            TextSpan(
+                              text: 'Terms and Conditions',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TermsAndConditions(),
+                                    ),
+                                  );
+                                },
+                            ),
+                            TextSpan(
+                              text: '.',
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
                       Column(
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              // Tu acción cuando se presione el botón
+                            onPressed: () async {
+                              checkPermission(Permission.notification, context);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green[800],
@@ -170,62 +226,27 @@ class _SignUpState extends State<SignUp> {
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               padding: EdgeInsets.symmetric(
-                                  vertical: 17.0, horizontal: 57.0),
-                            ),
-                            child: Text(
-                              'Get Started',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white,
+                                vertical: 17.0,
                               ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                SizedBox(width: 11.0),
+                                Text(
+                                  'Get started',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(height: 10.0),
-                          Text(
-                            'Or sign up with',
-                            style: TextStyle(fontSize: 11.5),
-                          ),
-                          SizedBox(height: 10.0),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.g_translate_outlined,
-                              color: Colors.black,
-                              size: 14.0,
-                            ),
-                            label: Text('Sign up with Google',
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.black,
-                                )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 17.0, horizontal: 33.0),
-                            ),
-                          ),
-                          SizedBox(height: 10.0),
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: Icon(Icons.facebook_outlined, size: 14.0),
-                            label: Text('Sign up with Facebook',
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.white,
-                                )),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.blue[900],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 17.5, horizontal: 27.0),
-                            ),
-                          ),
-                          SizedBox(height: 25.0),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -243,7 +264,7 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: 'Log in!',
+                                    text: 'Log In!',
                                     style: TextStyle(
                                       decoration: TextDecoration.underline,
                                     ),

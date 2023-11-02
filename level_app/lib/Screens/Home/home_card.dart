@@ -32,58 +32,61 @@ class HomeCard extends StatefulWidget {
 class _HomeCardState extends State<HomeCard> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    widget.image,
-                    width: 170,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(
-                  height: 150,
-                  child: VerticalDivider(
-                    thickness: 3,
-                    color: Color(0xFF424242),
-                  ),
-                ),
-                Flexible(
-                  child: Text(
-                    widget.text,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 18,
+    return Flex(
+      direction: Axis.vertical,
+      children:[ Expanded(
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.image,
+                      width: 170,
+                      height: 150,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const Row(
-              children: [
-                 Icon(
-                  Icons.access_time,
-                  size: 20,
-                ),
-                 Text("Hace 5 horas")
-              ],
-            )
-            
-          ],
+                  const SizedBox(
+                    height: 150,
+                    child: VerticalDivider(
+                      thickness: 3,
+                      color: Color(0xFF424242),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      widget.text,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Row(
+                children: [
+                   Icon(
+                    Icons.access_time,
+                    size: 20,
+                  ),
+                   Text("Hace 5 horas")
+                ],
+              )
+              
+            ],
+          ),
         ),
-      ),
+      ),]
     );
   }
 }
