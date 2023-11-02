@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import '../Widgets/News/NewsContainer.dart';
 import '../Widgets/NextMacthes/NextMacthesColumn.dart';
+import 'TeamProfile.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class AthleteProfileWidget extends StatefulWidget {
-  const AthleteProfileWidget({Key? key}) : super(key: key);
+  int id = 0;
+  
+  AthleteProfileWidget({super.key, required this.id});
 
   @override
   _AthleteProfileWidgetState createState() => _AthleteProfileWidgetState();
@@ -12,10 +17,49 @@ class AthleteProfileWidget extends StatefulWidget {
 class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  List _myAthlete = [];
+  List _allAthletes = [];
+  List _allTeams = [];
+  List _myTeam = [];
+
+  Future<void> readJson(int id) async {
+    final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
+    final data = await json.decode(response);
+    setState(() {
+      _allAthletes = data["athletes"];
+      _allTeams = data["teams"];
+      _myAthlete = getAthlete(id, _allAthletes);
+      _myTeam = getTeam(_myAthlete[0]["team"], _allTeams);
+    });
+    print(_myTeam);
+  }
+
+  List getAthlete(id, athleteData){
+    List myTeams = [];
+    for (var i = 0; i < athleteData.length; i++) {
+      if(id == athleteData[i]["id"]) {
+        myTeams.add(athleteData[i]);
+        return myTeams;
+      }
+    }
+    return myTeams;
+  }
+  
+  List getTeam(id, teamsData){
+    List myTeams = [];
+    for (var i = 0; i < teamsData.length; i++) {
+      if(id == teamsData[i]["id"]) {
+        myTeams.add(teamsData[i]);
+        return myTeams;
+      }
+    }
+    return myTeams;
+  }
 
   @override
   void initState() {
     super.initState();
+    readJson(widget.id);
   }
 
   @override
@@ -66,10 +110,10 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                         height: 124,
                         decoration: BoxDecoration(
                           color: Theme.of(context).highlightColor,
-                          image: const DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/images/16538364434742.jpg',
+                            image: NetworkImage(
+                              _myAthlete[0]["background"],
                             ),
                           ),
                         ),
@@ -89,10 +133,9 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                             ),
-                            child: Image.asset(
-                              'assets/images/Captura_de_pantalla_2023-09-27_161228.png',
-                              fit: BoxFit.cover,
-                              alignment: const Alignment(0.00, 0.00),
+                            child: Image.network(
+                              _myAthlete[0]["profile"], 
+                              fit: BoxFit.cover, 
                             ),
                           ),
                         ),
@@ -114,7 +157,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                'Courtois',
+                                _myAthlete[0]["name"],
                                 style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Row(
@@ -141,7 +184,12 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
-                                      Navigator.of(context).pushNamed('TeamProfile');
+                                      Navigator.push(
+                                        context,
+                                          MaterialPageRoute(
+                                            builder: (context) => TeamProfileWidget(id: _myTeam[0]["id"],)
+                                          ),
+                                        );
                                     },
                                     child: Container(
                                       width: 40,
@@ -150,10 +198,9 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                       ),
-                                      child: Image.asset(
-                                        'assets/images/real-madrid-logo.png',
-                                        fit: BoxFit.contain,
-                                        alignment: const Alignment(0.00, 0.00),
+                                      child: Image.network(
+                                        _myTeam[0]["profile"], 
+                                        fit: BoxFit.cover, 
                                       ),
                                     ),
                                   ),
@@ -163,10 +210,15 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
-                                      Navigator.of(context).pushNamed('TeamProfile');
+                                      Navigator.push(
+                                        context,
+                                          MaterialPageRoute(
+                                            builder: (context) => TeamProfileWidget(id: _myTeam[0]["id"],)
+                                          ),
+                                        );
                                     },
                                     child: Text(
-                                      'Real Madrid',
+                                      _myTeam[0]["name"],
                                       style: Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ),

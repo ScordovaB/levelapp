@@ -12,7 +12,7 @@ Widget buildItem(BuildContext context, String imagePath, String teamName, int id
       Navigator.push(
       context,
         MaterialPageRoute(
-          builder: (context) => team ? TeamProfileWidget(id: id,) : const AthleteProfileWidget(),
+          builder: (context) => team ? TeamProfileWidget(id: id,) : AthleteProfileWidget(id: id),
         ),
       );
     },
