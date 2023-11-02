@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../Profiles/TeamProfile.dart';
 import '../../Profiles/AthleteProfile.dart';
 
-Widget buildItem(BuildContext context, String imagePath, String teamName, bool team) {
+Widget buildItem(BuildContext context, String imagePath, String teamName, int id, bool team) {
   return InkWell(
     splashColor: Colors.transparent,
     focusColor: Colors.transparent,
@@ -12,7 +12,7 @@ Widget buildItem(BuildContext context, String imagePath, String teamName, bool t
       Navigator.push(
       context,
         MaterialPageRoute(
-          builder: (context) => team ? const TeamProfileWidget() : const AthleteProfileWidget(),
+          builder: (context) => team ? TeamProfileWidget(id: id,) : AthleteProfileWidget(id: id),
         ),
       );
     },
@@ -27,7 +27,7 @@ Widget buildItem(BuildContext context, String imagePath, String teamName, bool t
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
           ),
-          child: Image.asset(
+          child: Image.network(
             imagePath,
             fit: BoxFit.contain,
           ),
@@ -36,10 +36,10 @@ Widget buildItem(BuildContext context, String imagePath, String teamName, bool t
           teamName,
           textAlign: TextAlign.center,
           maxLines: 2,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14, 
             fontWeight: FontWeight.bold, 
-            color: Colors.black, 
+            color: Theme.of(context).disabledColor, 
           ),
         ),
       ],

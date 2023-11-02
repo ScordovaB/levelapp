@@ -100,6 +100,7 @@ flutter:
     - assets/images/fmf-seleccion-de-mexico-logo-1.png
     - lib/Screens/Search/profiles.json
     - assets/testing_data/sport_data.json
+    - assets/testing_data/user_data.json
     - assets/testing_data/main_news.json
     - lib/Screens/Search/profiles.json 
     - assets/images/vs.jpg

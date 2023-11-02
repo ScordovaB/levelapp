@@ -15,7 +15,7 @@ class NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -37,8 +37,8 @@ class NewsCard extends StatelessWidget {
             child: Container(
               width: 271,
               height: 73,
-              decoration: const BoxDecoration(
-                color: Color(0xA6FFFFFF),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
                 shape: BoxShape.rectangle,
               ),
               child: Align(
@@ -51,7 +51,7 @@ class NewsCard extends StatelessWidget {
                     style: const TextStyle(
                       fontFamily: 'Outfit',
                       fontSize: 18,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -63,8 +63,8 @@ class NewsCard extends StatelessWidget {
             child: Container(
               width: 219,
               height: 73,
-              decoration: const BoxDecoration(
-                color: Color(0xA6FFFFFF),
+              decoration: BoxDecoration(
+                color: Theme.of(context).dialogBackgroundColor,
                 shape: BoxShape.rectangle,
               ),
               child: Align(
@@ -75,8 +75,8 @@ class NewsCard extends StatelessWidget {
                     subtitle,
                     maxLines: 4,
                     style: const TextStyle(
-                      fontSize: 12, 
-                      color: Colors.black, 
+                      fontFamily: 'Outfit',
+                      fontSize: 12,                      
                     ),
                   ),
                 ),
@@ -90,7 +90,7 @@ class NewsCard extends StatelessWidget {
                 print('Button pressed ...');
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF3299E7),
+                backgroundColor: Theme.of(context).primaryColorDark,
                 padding: const EdgeInsets.symmetric(horizontal: 24),
               ),
               child: const Text(
