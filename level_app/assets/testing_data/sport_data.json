@@ -1,152 +1,153 @@
 {
     "athletes": [
-        {
-            "id": 1,
-            "name": "Courtois",
-            "team": 1,
-            "sport": 1,
-            "background": "https://www.eleconomista.com.mx/__export/1653871121091/sites/eleconomista/img/2022/05/29/thibaut_courtois.jpg_1902800913.jpg",
-            "profile": "https://cadenaser.com/resizer/uTHVFYKKADXKMLRcFuZvxLecvk8=/736x552/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/prisaradio/C3JZKKDH4FEXZJQEUVERQALNZI.jpg"
-        },
-        {
-            "id": 2,
-            "name": "Mbappe",
-            "team": 2,
-            "sport": 1,
-            "background": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg",
-            "profile": "https://pliki.meczyki.pl/big700/454/64a6ca6188f9f.jpg"
-        },
-        {
-            "id": 3,
-            "name": "Ronaldo",
-            "team": 3,
-            "sport": 1,
-            "background": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg",
-            "profile": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg"
-        },
-        {
-            "id": 4,
-            "name": "Messi",
-            "team": 2,
-            "sport": 1,
-            "background": "https://media.gq.com.mx/photos/6349931c5171b4baec7ce8b9/3:2/w_2340,h_1560,c_limit/Lionel_Messi_1243755223.jpg",
-            "profile": "https://media.gq.com.mx/photos/6349931c5171b4baec7ce8b9/3:2/w_2340,h_1560,c_limit/Lionel_Messi_1243755223.jpg"
-        }
+      {
+        "id": 1,
+        "name": "Courtois",
+        "team": 1,
+        "sport": 1,
+        "background": "https://www.eleconomista.com.mx/__export/1653871121091/sites/eleconomista/img/2022/05/29/thibaut_courtois.jpg_1902800913.jpg",
+        "profile": "https://cadenaser.com/resizer/uTHVFYKKADXKMLRcFuZvxLecvk8=/736x552/filters:format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com/prisaradio/C3JZKKDH4FEXZJQEUVERQALNZI.jpg"
+      },
+      {
+        "id": 2,
+        "name": "Mbappe",
+        "team": 2,
+        "sport": 1,
+        "background": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg",
+        "profile": "https://pliki.meczyki.pl/big700/454/64a6ca6188f9f.jpg"
+      },
+      {
+        "id": 3,
+        "name": "Ronaldo",
+        "team": 3,
+        "sport": 1,
+        "background": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg",
+        "profile": "https://static.srpcdigital.com/styles/1037xauto/public/2023-10/389537_0.jpeg"
+      },
+      {
+        "id": 4,
+        "name": "Messi",
+        "team": 2,
+        "sport": 1,
+        "background": "https://media.gq.com.mx/photos/6349931c5171b4baec7ce8b9/3:2/w_2340,h_1560,c_limit/Lionel_Messi_1243755223.jpg",
+        "profile": "https://media.gq.com.mx/photos/6349931c5171b4baec7ce8b9/3:2/w_2340,h_1560,c_limit/Lionel_Messi_1243755223.jpg"
+      }
     ],
     "teams": [
-        {
+      {
+        "id": 1,
+        "name": "Real Madrid",
+        "athletes": [1],
+        "background": "https://assets.stickpng.com/images/584a9b47b080d7616d298778.png",
+        "profile": "https://assets.stickpng.com/images/584a9b47b080d7616d298778.png",
+        "description": "Real Madrid is a top football club.",
+        "next_matches": [
+          {
             "id": 1,
-            "name": "Real Madrid",
-            "athletes": [1],
-            "background": "https://assets.stickpng.com/images/584a9b47b080d7616d298778.png",
-            "profile": "https://assets.stickpng.com/images/584a9b47b080d7616d298778.png",
-            "description": "Real Madrid is a top football club.",
-            "next_matches": [
-                {
-                    "id": 1,
-                    "date": "Sat, 30/9 10:30",
-                    "home_team": 3,
-                    "away_team": 1,
-                    "link": ""
-                },
-                {
-                    "id": 2,
-                    "date": "Mar, 3/10 10:30",
-                    "home_team": 2,
-                    "away_team": 3,
-                    "link": ""
-                }
-            ],
-            "news": [
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                },
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                }
-            ]
-        },
-        {
+            "date": "Sat, 30/9 10:30",
+            "home_team": 3,
+            "away_team": 1,
+            "link": ""
+          },
+          {
             "id": 2,
-            "name": "Paris Saint-Germain",
-            "athletes": [2, 4],
-            "background": "https://wallpapers.com/images/hd/geometric-psg-blue-logo-art-xvmia9zk7114yfw4.jpg",
-            "profile": "https://seeklogo.com/images/P/psg-logo-DEE93C563D-seeklogo.com.png",
-            "description": "Paris Saint-Germain (PSG) is a prominent football club.",
-            "next_matches": [
-                {
-                    "id": 1,
-                    "date": "Sat, 30/9 10:30",
-                    "home_team": 3,
-                    "away_team": 1,
-                    "link": ""
-                },
-                {
-                    "id": 2,
-                    "date": "Mar, 3/10 10:30",
-                    "home_team": 2,
-                    "away_team": 3,
-                    "link": ""
-                }
-            ],
-            "news": [
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                },
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                }
-            ]
-        },
-        {
-            "id": 3,
-            "name": "Manchester United",
-            "athletes": [3],
-            "background": "https://wallpapers.com/images/featured/manchester-united-logo-background-e45hfwpfz9aewlv4.jpg",
-            "profile": "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png",
-            "description": "Manchester United is a renowned football club.",
-            "next_matches": [
-                {
-                    "id": 1,
-                    "date": "Sat, 30/9 10:30",
-                    "home_team": 3,
-                    "away_team": 1,
-                    "link": ""
-                },
-                {
-                    "id": 2,
-                    "date": "Mar, 3/10 10:30",
-                    "home_team": 2,
-                    "away_team": 3,
-                    "link": ""
-                }
-            ],
-            "news": [
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                },
-                {
-                    "title": "",
-                    "subtitle": "",
-                    "link": "",
-                    "image": ""
-                }
-            ]
-        }
+            "date": "Mar, 3/10 10:30",
+            "home_team": 1,
+            "away_team": 2,
+            "link": ""
+          }
+        ],
+        "news": [
+          {
+            "title": "Real Madrid Wins Exciting Match Against Barcelona",
+            "subtitle": "Courtois Shines as Real Madrid Triumphs",
+            "link": "https://example.com/real_madrid_vs_barcelona",
+            "image": "https://okdiario.com/diariomadridista/img/2022/07/24/courtois-1-655x368.jpg"
+          },
+          {
+            "title": "Real Madrid's Youth Academy Produces Future Stars",
+            "subtitle": "Nurturing Young Talent for Success",
+            "link": "https://example.com/real_madrid_youth_academy",
+            "image": "https://okdiario.com/diariomadridista/img/2022/07/24/courtois-1-655x368.jpg"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Paris Saint-Germain",
+        "athletes": [2, 4],
+        "background": "https://wallpapers.com/images/hd/geometric-psg-blue-logo-art-xvmia9zk7114yfw4.jpg",
+        "profile": "https://seeklogo.com/images/P/psg-logo-DEE93C563D-seeklogo.com.png",
+        "description": "Paris Saint-Germain (PSG) is a prominent football club.",
+        "next_matches": [
+          {
+            "id": 1,
+            "date": "Sat, 30/9 10:30",
+            "home_team": 3,
+            "away_team": 2,
+            "link": ""
+          },
+          {
+            "id": 2,
+            "date": "Mar, 3/10 10:30",
+            "home_team": 2,
+            "away_team": 3,
+            "link": ""
+          }
+        ],
+        "news": [
+          {
+            "title": "Mbappé and Messi Lead PSG to Victory",
+            "subtitle": "Dynamic Duo Dominates in Latest Match",
+            "link": "https://example.com/mbappe_messi_victory",
+            "image": "https://estaticos-cdn.sport.es/clip/66c43096-61e2-4b8f-ad45-8ee4b2cd3ba3_alta-libre-aspect-ratio_default_0.jpg"
+          },
+          {
+            "title": "PSG's New Signing Sets High Expectations",
+            "subtitle": "Exciting Transfer Adds Depth to the Squad",
+            "link": "https://example.com/psg_new_signing",
+            "image": "https://estaticos-cdn.elperiodico.com/clip/20863751-72dd-46b6-88ba-a2ff4f0bf007_alta-libre-aspect-ratio_default_0.jpg"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Manchester United",
+        "athletes": [3],
+        "background": "https://wallpapers.com/images/featured/manchester-united-logo-background-e45hfwpfz9aewlv4.jpg",
+        "profile": "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png",
+        "description": "Manchester United is a renowned football club.",
+        "next_matches": [
+          {
+            "id": 1,
+            "date": "Sat, 30/9 10:30",
+            "home_team": 3,
+            "away_team": 1,
+            "link": ""
+          },
+          {
+            "id": 2,
+            "date": "Mar, 3/10 10:30",
+            "home_team": 2,
+            "away_team": 3,
+            "link": ""
+          }
+        ],
+        "news": [
+          {
+            "title": "Ronaldo's Historic Performance Secures Victory",
+            "subtitle": "Hat-Trick Heroics by Cristiano Ronaldo",
+            "link": "https://example.com/ronaldo_historic_performance",
+            "image": "https://media.gq.com.mx/photos/62640813ed0ce9a3c914bc88/16:9/w_2560%2Cc_limit/cristiano%2520ronaldo.jpg"
+          },
+          {
+            "title": "Manchester United's Charity Drive in Full Swing",
+            "subtitle": "Club Initiates Community Outreach Campaign",
+            "link": "https://example.com/manchester_united_charity",
+            "image": "https://therepublikofmancunia.com/wp-content/uploads/2023/01/FkwHK5JWYAEFgYX.jpeg"
+          }
+        ]
+      }
     ]
-}
+  }
+  

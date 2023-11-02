@@ -203,12 +203,12 @@ class _TeamProfileWidgetState extends State<TeamProfileWidget> {
                     ),
                   ],
                 ),
-                NewsContainer(),
+                NewsContainer(news: _myTeam[0]["news"]),
                 Container(
                   width: double.infinity,
                   height: 258,
                   decoration: const BoxDecoration(),
-                  child: NextMatchesColumn(),
+                  child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,

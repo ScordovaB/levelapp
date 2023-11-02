@@ -50,7 +50,7 @@ class NextMatchContainer extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset(
+                    child: Image.network(
                       team1Image,
                       fit: BoxFit.contain,
                     ),
@@ -69,7 +69,7 @@ class NextMatchContainer extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset(
+                    child: Image.network(
                       team2Image,
                       fit: BoxFit.contain,
                     ),
