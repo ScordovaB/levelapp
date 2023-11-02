@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:level_app/Screens/Events/event_home.dart';
 import 'package:level_app/Screens/Home/home.dart';
+import 'package:level_app/Screens/Search/search_page.dart';
 
 class OBGreenPalette {
   static const MaterialColor kToDark = MaterialColor(
@@ -35,7 +36,7 @@ class _NavState extends State<Nav> {
   final List<Widget> _pages = [
     const Home(),
     const EventHome(),
-    const Home(),
+    const SearchPage()
     //Aqui se agregan la siguientes vistas
   ];
 
@@ -50,6 +51,7 @@ class _NavState extends State<Nav> {
       theme: ThemeData(
         primaryColor: widget.theme.primaryColor,
         colorScheme: widget.theme.colorScheme,
+        useMaterial3: false
       ),
       home: Scaffold(
       
@@ -65,7 +67,7 @@ class _NavState extends State<Nav> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.sports_hockey), label: 'Vs'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: 'Followed'),
+            BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: 'Search'),
           ],
           backgroundColor: widget.theme.colorScheme.background,
           selectedItemColor: widget.theme.colorScheme.primary,
