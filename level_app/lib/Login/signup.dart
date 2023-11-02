@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/main.dart';
+import 'package:level_app/Login/termsAndConditions.dart';
 import 'package:level_app/navigation.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/gestures.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -177,6 +179,41 @@ class _SignUpState extends State<SignUp> {
                         ],
                       ),
                       SizedBox(height: 22.0),
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 10.0,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  'When creating your account, you accept the ',
+                            ),
+                            TextSpan(
+                              text: 'Terms and Conditions',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TermsAndConditions(),
+                                    ),
+                                  );
+                                },
+                            ),
+                            TextSpan(
+                              text: '.',
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
                       Column(
                         children: [
                           ElevatedButton(
