@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/main.dart';
 import 'package:level_app/navigation.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -13,6 +14,25 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  Future<void> checkPermission(
+      Permission permission, BuildContext context) async {
+    final status = await permission.request();
+    print(status);
+    if (status.isGranted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Permission granted")));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Nav(
+            theme: Theme.of(context),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +59,8 @@ class _SignUpState extends State<SignUp> {
                     decoration: BoxDecoration(
                       color: Colors.green.withOpacity(0.25),
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                            16.0), // Redondea la esquina superior izquierda
-                        topRight: Radius.circular(
-                            16.0), // Redondea la esquina superior derecha
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
                       ),
                     ),
                   ),
@@ -65,8 +83,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ]),
                 Container(
-                  padding:
-                      const EdgeInsets.all(30.0), // Espacio en todos los lados
+                  padding: const EdgeInsets.all(30.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.0),
@@ -163,15 +180,8 @@ class _SignUpState extends State<SignUp> {
                       Column(
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Nav(
-                                    theme: Theme.of(context),
-                                  ),
-                                ),
-                              );
+                            onPressed: () async {
+                              checkPermission(Permission.notification, context);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green[800],
