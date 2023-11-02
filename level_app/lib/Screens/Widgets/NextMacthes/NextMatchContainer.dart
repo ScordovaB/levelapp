@@ -81,8 +81,7 @@ class NextMatchContainer extends StatelessWidget {
           Align(
             alignment: AlignmentDirectional(0.88, -0.08),
             child: ElevatedButton(
-              onPressed: () {
-              },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 primary: Colors.greenAccent,
                 padding: EdgeInsets.symmetric(horizontal: 5),
@@ -94,7 +93,7 @@ class NextMatchContainer extends StatelessWidget {
               child: Text(
                 'More Info',
                 style: TextStyle(
-                  fontSize: 16, 
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
