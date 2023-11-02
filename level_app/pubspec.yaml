@@ -41,6 +41,14 @@ dependencies:
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
   bloc: ^8.1.2
+  # files and storage management
+  image_picker: ^1.0.4
+  path_provider: ^2.1.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  # permissions
+  permission_handler: ^11.0.1
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
@@ -91,7 +99,20 @@ flutter:
     - assets/images/lakers.png
     - assets/images/fmf-seleccion-de-mexico-logo-1.png
     - lib/Screens/Search/profiles.json 
-
+    - assets/images/vs.jpg
+    - assets/images/events/copa.png
+    - assets/images/events/arsenal.png
+    - assets/images/events/athletic-bilbao-logo.png
+    - assets/images/events/bayern.png
+    - assets/images/events/espanyol-logo.png
+    - assets/images/events/franceTeam.png
+    - assets/images/events/kosice.png
+    - assets/images/events/rangers-fc-logo.png
+    - assets/images/events/real.png
+    - assets/images/events/vs.png
+    - assets/images/events/fmf-seleccion-de-mexico-logo-1.png
+    - assets/images/events/united-states-national-soccer-team-logo.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
