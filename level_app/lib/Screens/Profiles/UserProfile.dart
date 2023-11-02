@@ -16,6 +16,10 @@ class UserProfileWidget extends StatefulWidget {
 class _UserProfileWidgetState extends State<UserProfileWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String username = 'Andrew D.';
+  String bio = '';
+  String email = 'andrew@domainname.com';
+  
   List _users = [];
   List _teams = [];
   List _athletes = [];
