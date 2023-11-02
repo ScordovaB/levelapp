@@ -90,7 +90,9 @@ flutter:
     - assets/images/Captura_de_pantalla_2023-09-27_161300.png
     - assets/images/lakers.png
     - assets/images/fmf-seleccion-de-mexico-logo-1.png
-    - lib/Screens/Search/profiles.json 
+    - lib/Screens/Search/profiles.json
+    - assets/testing_data/sport_data.json
+    - assets/testing_data/main_news.json
 
   #   - images/a_dot_ham.jpeg
 

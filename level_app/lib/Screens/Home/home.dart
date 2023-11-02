@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
-//import 'package:level_app/Screens/Profiles/UserProfile.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
-//import 'package:level_app/Screens/Widgets/Carousels/TeamCarousel.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,68 +14,58 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   final PageController _pageController = PageController(
     initialPage: 0,
   );
+  int _currentPage = 0;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  void _pageListener() {
+    setState(() {
+      _currentPage = _pageController.page?.round() ?? 0;
+    });
+  }
+
+  List _teams = [];
+  List _athletes = [];
+  List _mainNews = [];
+
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/testing_data/sport_data.json');
+    final data = await json.decode(response);
+    setState(() {
+      _teams = data["teams"];
+      _athletes = data["athletes"];
+      //print(_teams);
+      //print(_athletes);
+    });
+  }
+
+  Future<void> readMainNewsJson() async {
+    final String response =
+        await rootBundle.loadString('assets/testing_data/main_news.json');
+    final data = await json.decode(response);
+    setState(() {
+      _mainNews = data;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    readMainNewsJson();
+    readJson();
+    _pageController.addListener(_pageListener);
+  }
 
   @override
   void dispose() {
+    _pageController.removeListener(_pageListener);
     _pageController.dispose();
     super.dispose();
   }
-
-  List<String> teamsImages = [
-    "assets/images/sm.png",
-    "assets/images/rm.png",
-    "assets/images/nyk.png",
-    "assets/images/rangers-fc-logo.png",
-    "assets/images/espanyol-logo.png",
-  ];
-  List<List<String>> teamsNames = [
-    ["Seleccion Mexicana", "assets/images/sm.png"],
-    ["Real Madrid", "assets/images/rm.png"],
-    [
-      "NY Yankees",
-      "assets/images/nyk.png",
-    ],
-    [
-      "Rangers FC",
-      "assets/images/rangers-fc-logo.png",
-    ],
-    [
-      "Espanyol",
-      "assets/images/espanyol-logo.png",
-    ]
-  ];
-
-  List<String> athletesImages = [
-    "assets/images/neymar1.jpg",
-    "assets/images/ronaldo.jpg",
-    "assets/images/MESSI.jpeg",
-    "assets/images/Captura_de_pantalla_2023-09-27_161228.png",
-    "assets/images/Captura_de_pantalla_2023-09-27_161300.png"
-  ];
-  List<List<String>> athletesNames = [
-    [
-      "Neymar Jr",
-      "assets/images/neymar1.jpg",
-    ],
-    [
-      "Cristiano Ronaldo",
-      "assets/images/ronaldo.jpg",
-    ],
-    [
-      "Messi",
-      "assets/images/MESSI.jpeg",
-    ],
-    [
-      "Courtois",
-      "assets/images/Captura_de_pantalla_2023-09-27_161228.png",
-    ],
-    ["Modric", "assets/images/Captura_de_pantalla_2023-09-27_161300.png"]
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -165,26 +155,24 @@ class _HomeState extends State<Home> {
                                         controller: _pageController,
                                         scrollDirection: Axis.horizontal,
                                         //reverse: true,
-                                        children: const [
-                                          SizedBox(
-                                            child: HomeCard(
-                                                image:
-                                                    "assets/images/neymar1.jpg",
-                                                text:
-                                                    "Neymar breaks Pele's record for Brazil!"),
-                                          ),
-                                          SizedBox(
-                                            child: HomeCard(
-                                                image:
-                                                    "assets/images/neymar2.jpg",
-                                                text:
-                                                    "Neymar makes his debut for Al-Hilal!"),
-                                          ),
+                                        children: [
+                                          if (_mainNews.isNotEmpty)
+                                            SizedBox(
+                                              child: HomeCard(
+                                                image: _mainNews[0]["image"],
+                                                text: _mainNews[0]["title"],
+                                              ),
+                                            ),
+                                          if (_mainNews.length > 1)
+                                            SizedBox(
+                                              child: HomeCard(
+                                                image: _mainNews[1]["image"],
+                                                text: _mainNews[1]["title"],
+                                              ),
+                                            ),
                                         ],
                                       ),
                                     ),
-
-                                    //CAMBIAR A una LIST>GENERATE>ROWs para que se actulice el indicador
                                     //Ejemplo> https://www.youtube.com/watch?v=uPaH7aJZs-M
                                     Positioned(
                                       bottom: 10,
@@ -196,27 +184,31 @@ class _HomeState extends State<Home> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            // First Row child
+                                            
                                             Row(
                                               children: [
                                                 CircleAvatar(
                                                   radius: 5,
                                                   backgroundColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
+                                                      _currentPage == 0
+                                                          ? Theme.of(context)
+                                                              .colorScheme
+                                                              .primary
+                                                          : Colors.grey,
                                                 ),
                                               ],
                                             ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            // Second Row child
-                                            const Row(
+                                            const SizedBox(width: 5),
+                                            Row(
                                               children: [
                                                 CircleAvatar(
                                                   radius: 5,
-                                                  backgroundColor: Colors.grey,
+                                                  backgroundColor:
+                                                      _currentPage == 1
+                                                          ? Theme.of(context)
+                                                              .colorScheme
+                                                              .primary
+                                                          : Colors.grey,
                                                 ),
                                               ],
                                             ),
@@ -279,11 +271,11 @@ class _HomeState extends State<Home> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children:
-                                  List.generate(athletesImages.length, (index) {
-                                String item = athletesImages[index];
+                                  List.generate(_athletes.length, (index) {
+                                String item = _athletes[index]["profile"];
                                 return FollowElem(
                                   image: item,
-                                  list: athletesNames[index],
+                                  name: _athletes[index]["name"],
                                 );
                               }),
                             ),
@@ -336,11 +328,10 @@ class _HomeState extends State<Home> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children:
-                                  List.generate(teamsImages.length, (index) {
-                                String item = teamsImages[index];
+                              children: List.generate(_teams.length, (index) {
+                                String item = _teams[index]["profile"];
                                 return FollowElem(
-                                    image: item, list: teamsNames[index]);
+                                    image: item, name: _teams[index]["name"]);
                               }),
                             ),
                           ),

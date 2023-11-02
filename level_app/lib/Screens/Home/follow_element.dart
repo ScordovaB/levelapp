@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FollowElem extends StatefulWidget {
-  const FollowElem({super.key, required this.image, required this.list});
+  const FollowElem({super.key, required this.image, required this.name});
 
   final String image;
-  final List<String> list;
+  //final List<String> list;
+  final String name;
 
   @override
   State<FollowElem> createState() => _FollowElemState();
@@ -35,16 +36,16 @@ class _FollowElemState extends State<FollowElem> {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                 ),
-                child: Image.asset(
-                  widget.list[1],
+                child: Image.network(
+                  widget.image,
                   fit: BoxFit.contain,
                 ),
               ),
               SizedBox(
-                width: 50,
+                width: 55,
                 child: Text(
-                  widget.list[0],
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                  widget.name,
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                 ),
