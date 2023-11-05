@@ -1,0 +1,36 @@
+{
+    "users": [
+        {
+            "name": "Andrew D.",
+            "email": "andrew@email.com",
+            "teams": [1, 2, 3],
+            "athletes": [1, 2, 3, 4],
+            "background": "https://images.unsplash.com/photo-1444090695923-48e08781a76a?w=1280&h=720",
+            "profile": "https://images.unsplash.com/photo-1536084006720-6c105926e135?w=1280&h=720"
+        },
+        {
+            "name": "Sarah J.",
+            "email": "sarah@email.com",
+            "teams": [2, 3],
+            "athletes": [3, 4],
+            "background": "https://example.com/background2.jpg",
+            "profile": "https://example.com/profile2.jpg"
+        },
+        {
+            "name": "John M.",
+            "email": "john@email.com",
+            "teams": [1],
+            "athletes": [1, 2],
+            "background": "https://example.com/background3.jpg",
+            "profile": "https://example.com/profile3.jpg"
+        },
+        {
+            "name": "Emily S.",
+            "email": "emily@email.com",
+            "teams": [1, 2],
+            "athletes": [3, 4],
+            "background": "https://example.com/background4.jpg",
+            "profile": "https://example.com/profile4.jpg"
+        }
+    ]
+}

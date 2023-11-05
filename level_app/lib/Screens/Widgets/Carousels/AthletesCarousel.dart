@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'CarouselItem.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class AthleteCarouselWidget extends StatefulWidget {
-  const AthleteCarouselWidget({super.key});
+  List athletes = [];
+  AthleteCarouselWidget({super.key, required this.athletes});
 
   @override
   State<AthleteCarouselWidget> createState() => _AthleteCarouselWidget();
@@ -15,6 +18,38 @@ class _AthleteCarouselWidget extends State<AthleteCarouselWidget> {
   int carouselCurrentIndex1 = 1;
   int height = 60;
   double heightOut = 80;
+
+  List _allAthletes = [];
+  List _myAthletes = [];
+
+  Future<void> readJson(List athletes) async {
+    final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
+    final data = await json.decode(response);
+    setState(() {
+      _allAthletes = data["athletes"];
+      _myAthletes = getAthletes(athletes, _allAthletes);
+    });
+    print(_myAthletes);
+  }
+
+  List getAthletes(athletes, athletesData){
+    List myAthletes = [];
+    for (var j = 0; j < athletes.length; j++) {
+      for (var i = 0; i < athletesData.length; i++) {
+        if(athletes[j] == athletesData[i]["id"]) {
+          myAthletes.add(athletesData[i]);
+        }
+      }
+    }
+    return myAthletes;
+  }
+
+@override
+  void initState() {
+    super.initState();
+    readJson(widget.athletes);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -22,32 +57,15 @@ class _AthleteCarouselWidget extends State<AthleteCarouselWidget> {
         width: double.infinity,
         height: 149,
         child: CarouselSlider(
-          items: [
-            buildItem(
+          items:  _myAthletes.map((athlete) {
+            return buildItem(
               context,
-              'assets/images/Captura_de_pantalla_2023-09-27_161228.png',
-              'Courtois',
+              athlete['profile'],
+              athlete['name'],
+              athlete['id'],
               false
-            ),
-            buildItem(
-              context,
-              'assets/images/Captura_de_pantalla_2023-09-27_151312.png',
-              'Kylian Mbappé',
-              false
-            ),
-            buildItem(
-              context,
-              'assets/images/Captura_de_pantalla_2023-09-27_151259.png',
-              'Lionel Messi',
-              false
-            ),
-            buildItem(
-              context,
-              'assets/images/Captura_de_pantalla_2023-09-27_151243.png',
-              'Cristiano Ronaldo',
-              false
-            ),
-          ],
+            );
+          }).toList(),
           carouselController: carouselController,
           options: CarouselOptions(
           initialPage: 1,

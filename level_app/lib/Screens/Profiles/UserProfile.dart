@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart'; // Import the Material package
+import 'package:level_app/Screens/Profiles/edit_profile.dart';
 import 'package:level_app/Screens/settings.dart';
 import '../Widgets/Carousels/AthletesCarousel.dart';
 import '../Widgets/Carousels/TeamCarousel.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class UserProfileWidget extends StatefulWidget {
   const UserProfileWidget({Key? key}) : super(key: key);
@@ -11,8 +14,33 @@ class UserProfileWidget extends StatefulWidget {
 }
 
 class _UserProfileWidgetState extends State<UserProfileWidget> {
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  String username = 'Andrew D.';
+  String bio = '';
+  String email = 'andrew@domainname.com';
+  
+  List _users = [];
+  List _teams = [];
+  List _athletes = [];
+  Object _myUser = {};
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/testing_data/user_data.json');
+    final data = await json.decode(response);
+    setState(() {
+      _users = data["users"];
+      _myUser = _users[0];
+      _teams = _users[0]["teams"];
+      _athletes = _users[0]["athletes"];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    readJson();
+  }
 
   @override
   void dispose() {
@@ -24,25 +52,25 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_rounded,
-              color: Colors.black, 
+              color: Colors.black,
               size: 30,
             ),
             onPressed: () async {
-              Navigator.of(context).pop(); 
+              Navigator.of(context).pop();
             },
           ),
           title: Text(
             'My Profile',
-            style: Theme.of(context).textTheme.headline6, 
+            style: Theme.of(context).textTheme.titleLarge, 
           ),
-          actions: [],
+          actions: const [],
           centerTitle: false,
           elevation: 0,
         ),
@@ -53,7 +81,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   height: 200,
                   child: Stack(
                     children: [
@@ -61,10 +89,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         width: double.infinity,
                         height: 140,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              'https://images.unsplash.com/photo-1444090695923-48e08781a76a?w=1280&h=720',
+                              _users[0]["background"]
                             ),
                           ),
                         ),
@@ -73,15 +101,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         alignment: const AlignmentDirectional(-1.00, 1.00),
                         child: Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 16),
-                          child: Container(
+                          child: SizedBox(
                             width: 90,
                             height: 90,
                             child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  4, 4, 4, 4),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
-                                  'https://images.unsplash.com/photo-1536084006720-6c105926e135?w=1280&h=720',
+                                  _users[0]["profile"],
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -97,15 +126,15 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
                   child: Text(
-                    'Andrew D.',
-                    style: TextStyle(fontSize: 25), 
+                    _users[0]["name"],
+                    style: Theme.of(context).textTheme.headlineMedium, 
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
                   child: Text(
-                    'andrew@domainname.com',
-                    style: TextStyle(fontSize: 15),  
+                    _users[0]["email"],
+                    style: Theme.of(context).textTheme.headlineSmall,  
                   ),
                 ),
                 Padding(
@@ -114,25 +143,20 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton( 
-                        onPressed: () {
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor, 
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(38),
-                          ),
-                        ),
-                        child: Text(
-                          'Edit Profile',
-                          style: TextStyle(fontSize: 15, color: Colors.white), 
-                        ),
-                      ),
-                      ElevatedButton( 
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context)=> const Settings()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile(
+                                        onSave: (publicName, bio, email) {
+                                          setState(() {
+                                            username = publicName;
+                                            this.bio = bio;
+                                            this.email = email;
+                                          });
+                                        },
+                                      )));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor, 
@@ -140,9 +164,27 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                             borderRadius: BorderRadius.circular(38),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
+                          'Edit Profile',
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Settings()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(38),
+                          ),
+                        ),
+                        child: const Text(
                           'Settings',
-                          style: TextStyle(fontSize: 15, color: Colors.white), 
+                          style: TextStyle(fontSize: 15, color: Colors.white),
                         ),
                       ),
                     ],
@@ -153,20 +195,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Teams',
-                        style: Theme.of(context).textTheme.subtitle2, 
+                        style: Theme.of(context).textTheme.titleSmall, 
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
                       child: Text(
                         'See all',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           fontFamily: 'Readex Pro',
-                          color: Color(0xFB4B39EF),
+                          color: Theme.of(context).hintColor,
                         ),
                       ),
                     ),
@@ -180,10 +223,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: Container(
+                        child: SizedBox(
                           width: double.infinity,
                           height: 149,
-                          child: const TeamCarouselWidget()
+                          child: TeamCarouselWidget(teams: _teams)
                         ),
                       ),
                     ],
@@ -194,20 +237,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Athletes',
-                        style: Theme.of(context).textTheme.subtitle2, 
+                        style: Theme.of(context).textTheme.titleSmall, 
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 16, 16, 16),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 16, 16),
                       child: Text(
                         'See all',
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           fontFamily: 'Readex Pro',
-                          color: Color(0xFB4B39EF),
+                          color: Theme.of(context).hintColor,
                         ),
                       ),
                     ),
@@ -221,10 +265,10 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: Container(
+                        child: SizedBox(
                           width: double.infinity,
                           height: 149,
-                          child: const AthleteCarouselWidget()
+                          child: AthleteCarouselWidget(athletes: _athletes)
                         ),
                       ),
                     ],
