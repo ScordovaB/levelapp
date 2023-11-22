@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/team_model.dart';
+import '../../models/team_player_model.dart';
 
 
 

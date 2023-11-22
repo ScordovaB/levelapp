@@ -1,15 +1,13 @@
-import 'dart:convert';
+//import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:level_app/Screens/Search/constants.dart';
+//import 'package:level_app/Screens/Search/constants.dart';
 import 'package:level_app/Screens/Search/search_data.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
 import 'package:level_app/api/api_service.dart';
 import 'package:level_app/api/firestore_requests.dart';
-import '../../models/team_model.dart';
-
-
+import '../../models/team_player_model.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -19,17 +17,15 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
-  List<dynamic> profiles =[];
-  List<dynamic> filteredProfiles =[];
+  List<dynamic> profiles = [];
+  List<dynamic> filteredProfiles = [];
   String currentFilter = 'All';
   bool deleteFilter = false;
   late Future<List<Team>> teams;
   late Future<List<Player>> players;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     //loadJsonData();
     //profiles = jsonDecode(PROFILES);
@@ -40,10 +36,13 @@ class _SearchPageState extends State<SearchPage> {
     //fetchDataAndStore(); // Uncomment to fetch data from API and store in Firestore
     //storeSampleData();
   }
+
   Future<void> fetchDataAndStore() async {
     try {
-      List<Team> teams = await fetchFootballTeams('https://v3.football.api-sports.io/teams?league=39&season=2023');
-      List<Player> players = await fetchFootballPlayers('https://v3.football.api-sports.io/players?league=39&season=2023');
+      List<Team> teams = await fetchFootballTeams(
+          'https://v3.football.api-sports.io/teams?league=39&season=2023');
+      List<Player> players = await fetchFootballPlayers(
+          'https://v3.football.api-sports.io/players?league=39&season=2023');
       await storeTeams(teams);
       await storePlayers(players);
     } catch (e) {
@@ -51,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-    Future<void> fetchDataInList() async {
+  Future<void> fetchDataInList() async {
     List<Team> fetchedTeams = await teams;
     List<Player> fetchedPlayers = await players;
 
@@ -62,31 +61,47 @@ class _SearchPageState extends State<SearchPage> {
       print(profiles);
     });
   }
+
   void filterProfiles(String query) {
     setState(() {
       filteredProfiles = profiles
-          .where((profile) =>
-              profile['name'].toLowerCase().contains(query.toLowerCase()))
+          .where((profile) {
+            if (profile is Team) {
+              return profile.name.toLowerCase().contains(query.toLowerCase());
+            } else if (profile is Player) {
+              return profile.name.toLowerCase().contains(query.toLowerCase());
+            } else {
+              return false; // Handle or skip other types
+            }
+          })
           .toList();
     });
   }
+
   void filterByCategory(String category) {
     setState(() {
       currentFilter = category;
       if (category == 'All') {
         filteredProfiles = List.from(profiles); // Show all profiles
-      } else if(category == 'Team' || category == 'Athlete') {
-        filteredProfiles = profiles
-            .where((profile) => profile['type'].toLowerCase() == category.toLowerCase())
-            .toList();
-      } else if(category == 'Soccer' || category == 'Basketball' || category == 'Football') {
-        filteredProfiles = profiles
-            .where((profile) => profile['sport'].toLowerCase() == category.toLowerCase())
-            .toList();
+      } else if (category == 'Team') {
+        filteredProfiles = profiles.whereType<Team>().toList();
+      } else if (category == 'Athlete') {
+        filteredProfiles = profiles.whereType<Player>().toList();
+      } else if (category == 'Football' ||
+          category == 'Basketball' ||
+          category == 'AmericanFootball') {
+        filteredProfiles = profiles.where((profile) {
+          if (profile is Player) {
+            // Check the 'sport' property only for Player objects
+            return profile.sport.toLowerCase() == category.toLowerCase();
+          } else {
+            // Handle or skip Team objects
+            return false;
+          }
+        }).toList();
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +113,13 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                Padding(
-                padding:  const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                child: Text("Search for Athletes, Teams, and more!", 
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                child: Text("Search for Athletes, Teams, and more!",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary)),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -109,14 +127,13 @@ class _SearchPageState extends State<SearchPage> {
                     (BuildContext context, SearchController controller) {
                   return SearchBar(
                     hintText: 'eg: Messi',
-                    hintStyle:  MaterialStateProperty.all<TextStyle>(
+                    hintStyle: MaterialStateProperty.all<TextStyle>(
                         const TextStyle(color: Colors.grey)),
                     controller: controller,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 15.0)),
                     onTap: () {
                       controller.openView();
-                      
                     },
                     onChanged: (query) {
                       print("Query: $query");
@@ -131,8 +148,16 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 }, suggestionsBuilder:
                     (BuildContext context, SearchController controller) {
-                  return List<ListTile>.generate(filteredProfiles.length, (int index) {
-                    final String item = '${filteredProfiles[index]["name"]}';
+                  return List<ListTile>.generate(filteredProfiles.length,
+                      (int index) {
+                    final String item;
+                    if (filteredProfiles[index] is Team) {
+                      item = (filteredProfiles[index] as Team).name;
+                    } else if (filteredProfiles[index] is Player) {
+                      item = (filteredProfiles[index] as Player).name;
+                    } else {
+                      item = ''; // Handle or skip other types
+                    }
                     return ListTile(
                       title: Text(item),
                       onTap: () {
@@ -168,7 +193,9 @@ class _SearchPageState extends State<SearchPage> {
                               deleteFilter = true;
                             },
                             child: const Text("Teams")),
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -178,7 +205,9 @@ class _SearchPageState extends State<SearchPage> {
                               deleteFilter = true;
                             },
                             child: const Text("Athletes")),
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -188,7 +217,9 @@ class _SearchPageState extends State<SearchPage> {
                               deleteFilter = true;
                             },
                             child: const Icon(Icons.sports_soccer)),
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -198,7 +229,9 @@ class _SearchPageState extends State<SearchPage> {
                               deleteFilter = true;
                             },
                             child: const Icon(Icons.sports_basketball)),
-                        const SizedBox(width: 10,),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -211,13 +244,13 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   ),
-                  if(deleteFilter)
+                  if (deleteFilter)
                     Row(
                       children: [
                         const Text("Filtering by: "),
                         Text(currentFilter),
                         IconButton(
-                          onPressed: (){
+                          onPressed: () {
                             setState(() {
                               deleteFilter = false;
                               filterByCategory('All');
@@ -229,7 +262,9 @@ class _SearchPageState extends State<SearchPage> {
                     )
                 ],
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               Divider(thickness: 3, color: Theme.of(context).primaryColor),
               Expanded(
                 //height: 400,

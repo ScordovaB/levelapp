@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/team_model.dart';
+import '../models/team_player_model.dart';
 
 
 Future<List<Team>> getTeams() async {

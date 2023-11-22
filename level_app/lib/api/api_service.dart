@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
-import '../models/team_model.dart';
+import '../models/team_player_model.dart';
 
 Future<List<Team>> fetchFootballTeams(url) async {
   final response = await http.get(
@@ -49,6 +49,7 @@ Future<void> storeTeams(List<Team> teams) async {
     await teamsCollection.doc(team.id.toString()).set({
       'id': team.id,
       'name': team.name,
+      'sport': team.sport, // Assuming the sport is always football
       'background': team.background,
       'profile': team.profile,
       'description': team.description,
