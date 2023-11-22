@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:level_app/Screens/Search/constants.dart';
 import 'package:level_app/Screens/Search/search_data.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
+import 'package:level_app/api/api_service.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import '../../models/team_model.dart';
 
 
 
@@ -21,14 +24,43 @@ class _SearchPageState extends State<SearchPage> {
   List<dynamic> filteredProfiles =[];
   String currentFilter = 'All';
   bool deleteFilter = false;
+  late Future<List<Team>> teams;
+  late Future<List<Player>> players;
 
 
   @override
   void initState(){
     super.initState();
     //loadJsonData();
-    profiles = jsonDecode(PROFILES);
-    filteredProfiles = List.from(profiles);
+    //profiles = jsonDecode(PROFILES);
+    //filteredProfiles = List.from(profiles);
+    teams = getTeams();
+    players = getPlayers();
+    fetchDataInList();
+    //fetchDataAndStore(); // Uncomment to fetch data from API and store in Firestore
+    //storeSampleData();
+  }
+  Future<void> fetchDataAndStore() async {
+    try {
+      List<Team> teams = await fetchFootballTeams('https://v3.football.api-sports.io/teams?league=39&season=2023');
+      List<Player> players = await fetchFootballPlayers('https://v3.football.api-sports.io/players?league=39&season=2023');
+      await storeTeams(teams);
+      await storePlayers(players);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+    Future<void> fetchDataInList() async {
+    List<Team> fetchedTeams = await teams;
+    List<Player> fetchedPlayers = await players;
+
+    setState(() {
+      // Assuming profiles is a combination of teams and players
+      profiles = [...fetchedTeams, ...fetchedPlayers];
+      filteredProfiles = List.from(profiles);
+      print(profiles);
+    });
   }
   void filterProfiles(String query) {
     setState(() {
@@ -49,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
             .toList();
       } else if(category == 'Soccer' || category == 'Basketball' || category == 'Football') {
         filteredProfiles = profiles
-            .where((profile) => profile['discipline'].toLowerCase() == category.toLowerCase())
+            .where((profile) => profile['sport'].toLowerCase() == category.toLowerCase())
             .toList();
       }
     });
