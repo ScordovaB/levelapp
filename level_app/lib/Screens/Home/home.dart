@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
+import 'package:level_app/Providers/news_api.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -44,13 +45,14 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> readMainNewsJson() async {
-    final String response =
-        await rootBundle.loadString('assets/testing_data/main_news.json');
-    final data = await json.decode(response);
-    setState(() {
-      _mainNews = data;
-    });
-  }
+  final List response = await fetchNews();
+  
+  setState(() {
+    _mainNews = response;
+    //print(_mainNews);
+  });
+}
+
 
   @override
   void initState() {
@@ -159,15 +161,17 @@ class _HomeState extends State<Home> {
                                           if (_mainNews.isNotEmpty)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[0]["image"],
-                                                text: _mainNews[0]["title"],
-                                              ),
+                                              image: _mainNews[0]["urlToImage"],
+                                              text: _mainNews[0]["title"],
+                                              date: _mainNews[0]["publishedAt"],
+                                            ),
                                             ),
                                           if (_mainNews.length > 1)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[1]["image"],
+                                                image: _mainNews[1]["urlToImage"],
                                                 text: _mainNews[1]["title"],
+                                                date: _mainNews[1]["publishedAt"],
                                               ),
                                             ),
                                         ],

@@ -4,6 +4,7 @@ import '../Widgets/NextMacthes/NextMacthesColumn.dart';
 import 'TeamProfile.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:level_app/Providers/news_api.dart';
 
 class AthleteProfileWidget extends StatefulWidget {
   int id = 0;
@@ -21,6 +22,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
   List _allAthletes = [];
   List _allTeams = [];
   List _myTeam = [];
+  List _myNews = [];
 
   Future<void> readJson(int id) async {
     final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
@@ -30,8 +32,17 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
       _allTeams = data["teams"];
       _myAthlete = getAthlete(id, _allAthletes);
       _myTeam = getTeam(_myAthlete[0]["team"], _allTeams);
+      getNews(_myAthlete[0]["name"]);
     });
-    print(_myTeam);
+  }
+
+  getNews(name) async {
+    //print(name);
+    List news = await fetchSpecificNews(name);
+    setState(() {
+      _myNews = news;
+      //print(_myNews);
+    });
   }
 
   List getAthlete(id, athleteData){
@@ -260,7 +271,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                NewsContainer(news: _myTeam[0]["news"]),
+                NewsContainer(news: _myNews),
                 Container(
                   width: double.infinity,
                   height: 258,

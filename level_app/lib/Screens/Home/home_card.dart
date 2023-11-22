@@ -20,10 +20,11 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeCard extends StatefulWidget {
-  const HomeCard({super.key, required this.image, required this.text});
+  const HomeCard({super.key, required this.image, required this.text, required this.date});
 
   final String image;
   final String text;
+  final String date;
 
   @override
   State<HomeCard> createState() => _HomeCardState();
@@ -73,16 +74,15 @@ class _HomeCardState extends State<HomeCard> {
                   ),
                 ],
               ),
-              const Row(
+              Row(
                 children: [
-                   Icon(
+                   const Icon(
                     Icons.access_time,
                     size: 20,
                   ),
-                   Text("Hace 5 horas")
+                   Text(widget.date.substring(0, widget.date.length - 10))
                 ],
               )
-              
             ],
           ),
         ),

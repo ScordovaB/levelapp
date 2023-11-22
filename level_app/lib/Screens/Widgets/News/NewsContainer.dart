@@ -35,9 +35,9 @@ class _NewsContainerState extends State<NewsContainer> {
                   children: [
                     for (var newsItem in widget.news)
                       NewsCard(
-                        imageURL: newsItem['image'],
+                        imageURL: newsItem['urlToImage'],
                         title: newsItem['title'],
-                        subtitle: newsItem['subtitle'],
+                        subtitle: newsItem['description'],
                       ),
                   ],
                 ),
