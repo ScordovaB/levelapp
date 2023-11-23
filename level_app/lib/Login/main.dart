@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/signup.dart';
 import 'package:level_app/firebase_options.dart';
 import 'package:level_app/navigation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -30,6 +32,39 @@ class LoginHome extends StatefulWidget {
 }
 
 class _LoginHomeState extends State<LoginHome> {
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future userDetails(String name, String email, String password) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'name': name,
+      'email': email,
+      'password': password,
+      'teams': {},
+      'players': {}
+    });
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Nav(
+            theme: Theme.of(context),
+          ),
+        ),
+      );
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,14 +164,15 @@ class _LoginHomeState extends State<LoginHome> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
+                              _handleGoogleSignIn();
+                              /*Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Nav(
                                     theme: Theme.of(context),
                                   ),
                                 ),
-                              );
+                              );*/
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
@@ -160,7 +196,7 @@ class _LoginHomeState extends State<LoginHome> {
                                 ),
                                 SizedBox(width: 10.0),
                                 Text(
-                                  'Sign up with Google',
+                                  'Sign in with Google',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     color: Colors.black,
@@ -206,7 +242,7 @@ class _LoginHomeState extends State<LoginHome> {
                                 ),
                                 SizedBox(width: 10.0),
                                 Text(
-                                  'Sign up with Facebook',
+                                  'Sign in with Facebook',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     color: Colors.white,
