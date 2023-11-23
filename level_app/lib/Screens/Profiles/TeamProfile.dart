@@ -5,6 +5,8 @@
   import 'package:flutter/services.dart' show rootBundle;
   import 'dart:convert';
   import 'package:level_app/api/news_api.dart';
+  import 'package:level_app/api/firestore_requests.dart';
+  import 'package:level_app/models/team_player_model.dart';
 
   class TeamProfileWidget extends StatefulWidget {
     int id = 0;
@@ -17,46 +19,36 @@
   class _TeamProfileWidgetState extends State<TeamProfileWidget> {
 
     final scaffoldKey = GlobalKey<ScaffoldState>();
-
-    List _myTeam = [];
-    List _allTeams = [];
     List _myNews = [];
     
-    Future<void> readJson(int id) async {
-      final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
-      final data = await json.decode(response);
-      setState(() {
-        _allTeams = data["teams"];
-        _myTeam = getTeam(id, _allTeams);
-        readMainNewsJson(_myTeam[0]["name"]);
-      });
-    }
+    Team team = Team(id: 0, name: 'Loading', sport: 'Loading', background: "https://i.gifer.com/ZKZg.gif", profile: "https://i.gifer.com/ZKZg.gif", description: "", nextMatches: []);
+    late Future<Team> futureTeam;
 
-    List getTeam(id, teamsData){
-      List myTeams = [];
-      for (var i = 0; i < teamsData.length; i++) {
-        if(id == teamsData[i]["id"]) {
-          myTeams.add(teamsData[i]);
-          return myTeams;
-        }
-      }
-      return myTeams;
+    late List<Player> players = [];
+
+    Future<void> setData() async {
+      Team response = await futureTeam;
+      List<Player> response2 = await getPlayersByTeamId(response.id);
+      setState(() {
+        team = response;
+        players = response2;
+        readMainNewsJson(team.name);
+      });
     }
 
     Future<void> readMainNewsJson(name) async {
       final List response = await fetchSpecificNews(name);  
-      print(response);
       setState(() {
-        print("[!!!!!!!!!!!]");
         _myNews = response;
-        print("[!!!!!!!!!!!]");
       });
     }
 
     @override
     void initState() {
       super.initState();
-      readJson(widget.id);
+      futureTeam = getTeamById(widget.id);
+      setData();
+      
     }
 
     @override
@@ -111,7 +103,7 @@
                             image: DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
-                                _myTeam[0]["background"],
+                                team.background,
                               ),
                             ),
                           ),
@@ -132,7 +124,7 @@
                                 shape: BoxShape.circle,
                               ),
                               child: Image.network(
-                                _myTeam[0]["profile"], 
+                                team.profile, 
                                 fit: BoxFit.cover,
                                 width: 120,
                                 height: 120,
@@ -157,7 +149,7 @@
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  _myTeam[0]["name"],
+                                  team.name,
                                   style: Theme.of(context).textTheme.headlineSmall,
                                 ),
                                 Row(
@@ -165,7 +157,7 @@
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Soccer Team',
+                                      '${team.sport} Team',
                                       style: TextStyle(
                                         fontFamily: 'Readex Pro',
                                         color: Theme.of(context).primaryColorLight,
@@ -250,16 +242,19 @@
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        AthleteCarouselWidget(athletes: _myTeam[0]["athletes"]),                        
+                        if(players.isNotEmpty)
+                          AthleteCarouselWidget(athletes: players), 
+                        if(players.isEmpty)
+                          Text('Loading...')
                       ],
                     ),
                   ),
-                Container(
-                    width: double.infinity,
-                    height: 258,
-                    decoration: const BoxDecoration(),
-                    child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
-                  ),
+                // Container(
+                //     width: double.infinity,
+                //     height: 258,
+                //     decoration: const BoxDecoration(),
+                //     child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
+                //   ),
                 ],
               ),
             ),

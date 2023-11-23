@@ -6,6 +6,8 @@ import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
 import 'package:level_app/api/news_api.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import 'package:level_app/models/team_player_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,19 +30,19 @@ class _HomeState extends State<Home> {
     });
   }
 
-  List _teams = [];
-  List _athletes = [];
   List _mainNews = [];
 
-  Future<void> readJson() async {
-    final String response =
-        await rootBundle.loadString('assets/testing_data/sport_data.json');
-    final data = await json.decode(response);
+  late Future<List<Team>> teams;
+  late Future<List<Player>> players;
+  List<Team> fetchedTeams = [];
+  List<Player> fetchedPlayers = [];
+
+  Future<void> setData() async {
+    List<Team> t = await teams;
+    List<Player> p = await players;
     setState(() {
-      _teams = data["teams"];
-      _athletes = data["athletes"];
-      //print(_teams);
-      //print(_athletes);
+      fetchedTeams = t;
+      fetchedPlayers = p;
     });
   }
 
@@ -55,7 +57,9 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     readMainNewsJson();
-    readJson();
+    teams = getTeams();
+    players = getPlayers();
+    setData();
     _pageController.addListener(_pageListener);
   }
 
@@ -264,11 +268,13 @@ class _HomeState extends State<Home> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children:
-                                  List.generate(_athletes.length, (index) {
-                                String item = _athletes[index]["profile"];
+                                  List.generate(fetchedPlayers.length, (index) {
+                                String item = fetchedPlayers[index].photoUrl;
                                 return FollowElem(
                                   image: item,
-                                  name: _athletes[index]["name"],
+                                  name: fetchedPlayers[index].name,
+                                  id: fetchedPlayers[index].id,
+                                  team: false,
                                 );
                               }),
                             ),
@@ -321,10 +327,14 @@ class _HomeState extends State<Home> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: List.generate(_teams.length, (index) {
-                                String item = _teams[index]["profile"];
+                              children: List.generate(fetchedTeams.length, (index) {
+                                String item = fetchedTeams[index].profile;
                                 return FollowElem(
-                                    image: item, name: _teams[index]["name"]);
+                                    image: item, 
+                                    name: fetchedTeams[index].name,
+                                    id: fetchedTeams[index].id,
+                                    team: true,
+                                    );
                               }),
                             ),
                           ),

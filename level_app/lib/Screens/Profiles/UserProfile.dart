@@ -264,13 +264,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 149,
-                          child: AthleteCarouselWidget(athletes: _athletes)
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: SizedBox(
+                      //     width: double.infinity,
+                      //     height: 149,
+                      //     child: AthleteCarouselWidget(athletes: _athletes)
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
