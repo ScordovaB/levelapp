@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
     super.initState();
     readMainNewsJson();
     teams = getTeams();
-    players = getPlayers();
+    players = getPlayers(limit: 5);
     setData();
     _pageController.addListener(_pageListener);
   }

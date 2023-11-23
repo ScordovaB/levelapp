@@ -19,9 +19,15 @@ Future<List<Team>> getTeams() async {
   }).toList();
 }
 
-Future<List<Player>> getPlayers() async {
-  QuerySnapshot playersSnapshot = await FirebaseFirestore.instance.collection('players').get();
-  return playersSnapshot.docs.map((doc) {
+Future<List<Player>> getPlayers({int limit = -1}) async {
+  QuerySnapshot playersSnapshot;
+  if (limit > 0) {
+    playersSnapshot = await FirebaseFirestore.instance.collection('players').limit(limit).get();
+  } else {
+    playersSnapshot = await FirebaseFirestore.instance.collection('players').get();
+  }
+
+  return playersSnapshot.docs.map((doc) {   
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Player(
       id: data['id'],
