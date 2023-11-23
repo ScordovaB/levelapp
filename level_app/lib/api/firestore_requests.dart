@@ -3,8 +3,14 @@ import 'package:level_app/models/event_model.dart';
 import '../models/team_player_model.dart';
 
 
-Future<List<Team>> getTeams() async {
-  QuerySnapshot teamsSnapshot = await FirebaseFirestore.instance.collection('teams').get();
+Future<List<Team>> getTeams({int limit = -1}) async {
+  QuerySnapshot teamsSnapshot;
+  if (limit > 0) {
+    teamsSnapshot = await FirebaseFirestore.instance.collection('teams').limit(limit).get();
+  } else {
+    teamsSnapshot = await FirebaseFirestore.instance.collection('teams').get();
+  }
+
   return teamsSnapshot.docs.map((doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Team(
