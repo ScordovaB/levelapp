@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/signup.dart';
 import 'package:level_app/Login/main.dart';
@@ -14,7 +15,47 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _passwordVisible = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = '';
+
   @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Nav(
+              theme: Theme.of(context),
+            ),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = "Incorrect user or password";
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -102,6 +143,7 @@ class _LoginState extends State<Login> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _emailController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.email),
@@ -119,40 +161,46 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                       SizedBox(height: 10.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.lock_outline),
-                                labelText: "Password",
-                                iconColor: Colors.black,
-                                focusColor: Colors.green,
-                                fillColor: Colors.green,
-                                hoverColor: Colors.green,
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 9.0, horizontal: 15.0),
-                              ),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: !_passwordVisible,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.lock_outline),
+                          labelText: "Password",
+                          iconColor: Colors.black,
+                          focusColor: Colors.green,
+                          fillColor: Colors.green,
+                          hoverColor: Colors.green,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
                           ),
-                        ],
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 9.0, horizontal: 15.0),
+                        ),
                       ),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            _errorMessage,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
                       SizedBox(height: 26.0),
                       Column(
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Nav(
-                                    theme: Theme.of(context),
-                                  ),
-                                ),
-                              );
-                            },
+                            onPressed: _login,
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green[800],
                               shape: RoundedRectangleBorder(

@@ -144,7 +144,7 @@ class _SignUpState extends State<SignUp> {
                               obscureText: true,
                               decoration: InputDecoration(
                                 icon: Icon(Icons.person_3_outlined),
-                                labelText: "Name",
+                                labelText: "Password",
                                 iconColor: Colors.black,
                                 focusColor: Colors.green,
                                 fillColor: Colors.green,
@@ -165,7 +165,7 @@ class _SignUpState extends State<SignUp> {
                               obscureText: true,
                               decoration: InputDecoration(
                                 icon: Icon(Icons.lock_outline),
-                                labelText: "Password",
+                                labelText: "Confirm password",
                                 iconColor: Colors.black,
                                 focusColor: Colors.green,
                                 fillColor: Colors.green,

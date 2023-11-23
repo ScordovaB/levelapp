@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/signup.dart';
+import 'package:level_app/firebase_options.dart';
 import 'package:level_app/navigation.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
