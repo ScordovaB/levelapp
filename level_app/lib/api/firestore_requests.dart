@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:level_app/models/event_model.dart';
 import '../models/team_player_model.dart';
 
 
@@ -79,6 +80,26 @@ Future<List<Player>> getPlayersByTeamId(int teamId) async {
       nationality: data['nationality'],
       background: data['background'],
       teamId: data['teamId'],
+    );
+  }).toList();
+}
+
+Future<List<Event>> getEvents() async {
+  QuerySnapshot eventsSnapshot = await FirebaseFirestore.instance.collection('events').get();
+  return eventsSnapshot.docs.map((doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Event(
+      id: data['id'],
+      sport: data['sport'],
+      league: data['league'],
+      leagueImage: data['leagueImage'],
+      homeTeam: data['homeTeam'],
+      homeTeamImage: data['homeTeamImage'],
+      awayTeam: data['awayTeam'],
+      awayTeamImage: data['awayTeamImage'],
+      timestamp: data['timestamp'],
+      scoreHome: data['scoreHome'],
+      scoreAway: data['scoreAway'],
     );
   }).toList();
 }

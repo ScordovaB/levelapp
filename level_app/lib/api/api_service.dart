@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:level_app/models/event_model.dart';
 import '../models/team_player_model.dart';
+
 
 Future<List<Team>> fetchFootballTeams(url) async {
   final response = await http.get(
@@ -110,6 +112,70 @@ Future<void> storePlayers(List<Player> players) async {
     print('Error storing players: $e');
   }
 }
+Future<List<Event>> fetchFootballEvents(String apiUrl) async {
+  final response = await http.get(
+    Uri.parse(apiUrl),
+    headers: {
+      'x-apisports-key': '317f95e694a938fc9bd1b887fd662abd', // Replace with your actual API key
+    },
+  );
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+    if (responseData.containsKey('response')) {
+      List<dynamic> matchList = responseData['response'];
+      return matchList.map<Event>((matchData) {
+        Map<String, dynamic> homeTeam = matchData['teams']['home'];
+        Map<String, dynamic> awayTeam = matchData['teams']['away'];
+
+        return Event(
+          id: matchData['fixture']['id'],
+          sport: 'Football',
+          league: matchData['league']['name'],
+          leagueImage: matchData['league']['logo'],
+          homeTeam: homeTeam['name'],
+          homeTeamImage: homeTeam['logo'],
+          awayTeam: awayTeam['name'],
+          awayTeamImage: awayTeam['logo'],
+          timestamp: matchData['fixture']['timestamp'],
+          scoreHome: matchData['goals']['home'],
+          scoreAway: matchData['goals']['away'],
+        );
+      }).toList();
+    } else {
+      throw Exception('Invalid response format - missing "response" key');
+    }
+  } else {
+    throw Exception('Failed to load football events');
+  }
+}
+Future<void> storeFootballEvents(List<Event> events) async {
+  try {
+    final CollectionReference eventsCollection = FirebaseFirestore.instance.collection('events');
+
+    for (var event in events) {
+      await eventsCollection.doc(event.id.toString()).set({
+        'id': event.id,
+        'sport':event.sport,
+        'league': event.league,
+        'leagueImage': event.leagueImage,
+        'homeTeam': event.homeTeam,
+        'homeTeamImage': event.homeTeamImage,
+        'awayTeam': event.awayTeam,
+        'awayTeamImage': event.awayTeamImage,
+        'timestamp': event.timestamp,
+        'scoreHome': event.scoreHome,
+        'scoreAway': event.scoreAway,
+      });
+    }
+
+    print('Events stored successfully!');
+  } catch (e) {
+    print('Error storing events: $e');
+  }
+}
+
 
 Future<void> storeSampleData() async {
   try {
