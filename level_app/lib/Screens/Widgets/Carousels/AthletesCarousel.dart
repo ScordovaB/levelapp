@@ -44,10 +44,15 @@ class _AthleteCarouselWidget extends State<AthleteCarouselWidget> {
     return myAthletes;
   }
 
-@override
+  @override
   void initState() {
     super.initState();
     readJson(widget.athletes);
+  }
+
+ @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

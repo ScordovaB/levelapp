@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
+import 'package:level_app/api/news_api.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -44,11 +45,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> readMainNewsJson() async {
-    final String response =
-        await rootBundle.loadString('assets/testing_data/main_news.json');
-    final data = await json.decode(response);
+     final List response = await fetchNews();  
     setState(() {
-      _mainNews = data;
+      _mainNews = response;
     });
   }
 
@@ -80,14 +79,6 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // const Padding(
-                  //   padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
-                  //   child: AppBarLevel(),
-                  // ),
-                  // Divider(
-                  //   thickness: 2,
-                  //   color: Theme.of(context).colorScheme.primary,
-                  // ),
                   Padding(
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 20, 15, 0),
@@ -97,7 +88,7 @@ class _HomeState extends State<Home> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height:
-                              300, //MediaQuery.sizeOf(context).height * 0.400,
+                              300, 
                           decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor.value ==
                                       0xFF15571f
@@ -159,15 +150,17 @@ class _HomeState extends State<Home> {
                                           if (_mainNews.isNotEmpty)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[0]["image"],
+                                                image: _mainNews[0]["urlToImage"],
                                                 text: _mainNews[0]["title"],
+                                                date: _mainNews[0]["publishedAt"],
                                               ),
                                             ),
                                           if (_mainNews.length > 1)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[1]["image"],
+                                                image: _mainNews[1]["urlToImage"],
                                                 text: _mainNews[1]["title"],
+                                                date: _mainNews[1]["publishedAt"],
                                               ),
                                             ),
                                         ],
