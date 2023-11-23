@@ -30,6 +30,14 @@ class NewsCard extends StatelessWidget {
               height: 200,
               fit: BoxFit.cover,
               alignment: const Alignment(-1.00, 0.00),
+              errorBuilder: (context, error, stackTrace) {
+                return Image.network(
+                  'https://img.freepik.com/vector-premium/banners-television-noticias-ultima-hora-sobre-fondo-blanco_714603-853.jpg', // Provide the path to your placeholder image
+                  width: 365,
+                  height: 200,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
           ),
           Align(
@@ -76,7 +84,7 @@ class NewsCard extends StatelessWidget {
                     maxLines: 4,
                     style: const TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 12,                      
+                      fontSize: 12,
                     ),
                   ),
                 ),

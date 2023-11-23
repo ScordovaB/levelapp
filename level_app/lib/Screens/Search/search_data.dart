@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../models/team_player_model.dart';
-
+import 'package:level_app/Screens/Profiles/TeamProfile.dart';
+import 'package:level_app/Screens/Profiles/AthleteProfile.dart';
 
 
 // class ProfileList extends StatelessWidget {
@@ -47,6 +48,14 @@ class ProfileList extends StatelessWidget {
             leading: Image.network(team.profile, width: 50, height: 50),
             title: Text(team.name),
             subtitle: Text('${team.sport}\nTeam'),
+            onTap: () {
+              Navigator.push(
+                context,
+                  MaterialPageRoute(
+                    builder: (context) => TeamProfileWidget(id: team.id,),
+                  ),
+                );
+            }
           );
         } else if (profiles[index] is Player) {
           // Render player item
@@ -55,6 +64,14 @@ class ProfileList extends StatelessWidget {
             leading: Image.network(player.photoUrl, width: 50, height: 50),
             title: Text(player.name),
             subtitle: Text('Player\n : ${player.sport}'),
+            onTap: () {
+              Navigator.push(
+                context,
+                  MaterialPageRoute(
+                    builder: (context) => AthleteProfileWidget(id: player.id,),
+                  ),
+                );
+            }
           );
         } else {
           return Container(); // Placeholder for other types, if any
