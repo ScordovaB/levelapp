@@ -30,10 +30,10 @@ class _SearchPageState extends State<SearchPage> {
     //loadJsonData();
     //profiles = jsonDecode(PROFILES);
     //filteredProfiles = List.from(profiles);
-    teams = getTeams();
-    players = getPlayers();
-    fetchDataInList();
-    //fetchDataAndStore(); // Uncomment to fetch data from API and store in Firestore
+    // teams = getTeams();
+    // players = getPlayers();
+    // fetchDataInList();
+    fetchDataAndStore(); // Uncomment to fetch data from API and store in Firestore
     //storeSampleData();
   }
 
@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
       List<Team> teams = await fetchFootballTeams(
           'https://v3.football.api-sports.io/teams?league=39&season=2023');
       List<Player> players = await fetchFootballPlayers(
-          'https://v3.football.api-sports.io/players?league=39&season=2023');
+          'https://v3.football.api-sports.io/players?league=39&season=2023', pageCount: 3);
       await storeTeams(teams);
       await storePlayers(players);
     } catch (e) {

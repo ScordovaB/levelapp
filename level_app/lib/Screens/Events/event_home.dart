@@ -20,7 +20,7 @@ class _EventHomeState extends State<EventHome> {
   @override
   void initState() {
     super.initState();
-    //fetchEventAndStore();
+    //fetchEventAndStore(); //Uncomment this line to fetch events from API and store them in Firestore
     events = getEvents();
     fetchDataInList();
   }
@@ -28,7 +28,7 @@ class _EventHomeState extends State<EventHome> {
   Future<void> fetchEventAndStore() async {
     try {
       List<Event> events = await fetchFootballEvents(
-          'https://v3.football.api-sports.io/fixtures?league=39&season=2023&round=Regular%20Season%20-%2012');
+          'https://v3.football.api-sports.io/fixtures?league=39&season=2023&round=Regular%20Season%20-%2013');
       await storeFootballEvents(events);
     } catch (e) {
       print('Error: $e');

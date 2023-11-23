@@ -4,8 +4,10 @@ class Event {
   final String league;
   final String leagueImage;
   final String homeTeam;
+  final int homeTeamId;
   final String homeTeamImage;
   final String awayTeam;
+  final int awayTeamId;
   final String awayTeamImage;
   final int timestamp;
   final int scoreHome;
@@ -17,8 +19,10 @@ class Event {
     required this.league,
     required this.leagueImage,
     required this.homeTeam,
+    required this.homeTeamId,
     required this.homeTeamImage,
     required this.awayTeam,
+    required this.awayTeamId,
     required this.awayTeamImage,
     required this.timestamp,
     required this.scoreHome,
