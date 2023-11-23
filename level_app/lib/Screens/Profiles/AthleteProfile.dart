@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../Widgets/News/NewsContainer.dart';
 import '../Widgets/NextMacthes/NextMacthesColumn.dart';
 import 'TeamProfile.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
+import 'package:level_app/api/news_api.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import 'package:level_app/models/team_player_model.dart';
 
 class AthleteProfileWidget extends StatefulWidget {
   int id = 0;
@@ -17,49 +18,36 @@ class AthleteProfileWidget extends StatefulWidget {
 class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  List _myAthlete = [];
-  List _allAthletes = [];
-  List _allTeams = [];
-  List _myTeam = [];
+  List _myNews = [];
 
-  Future<void> readJson(int id) async {
-    final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
-    final data = await json.decode(response);
-    setState(() {
-      _allAthletes = data["athletes"];
-      _allTeams = data["teams"];
-      _myAthlete = getAthlete(id, _allAthletes);
-      _myTeam = getTeam(_myAthlete[0]["team"], _allTeams);
-    });
-    print(_myTeam);
-  }
-
-  List getAthlete(id, athleteData){
-    List myTeams = [];
-    for (var i = 0; i < athleteData.length; i++) {
-      if(id == athleteData[i]["id"]) {
-        myTeams.add(athleteData[i]);
-        return myTeams;
-      }
-    }
-    return myTeams;
-  }
   
-  List getTeam(id, teamsData){
-    List myTeams = [];
-    for (var i = 0; i < teamsData.length; i++) {
-      if(id == teamsData[i]["id"]) {
-        myTeams.add(teamsData[i]);
-        return myTeams;
-      }
-    }
-    return myTeams;
+  late Future<Player> Fplayer;
+  Player player = Player(id: 0, name: 'Loading', sport: 'Loading', nationality: 'Loading', photoUrl: "https://i.gifer.com/ZKZg.gif", background: "https://i.gifer.com/ZKZg.gif", teamId: 0);
+  Team team = Team(id: 0, name: 'Loading', sport: 'Loading', background: "https://i.gifer.com/ZKZg.gif", profile: "https://i.gifer.com/ZKZg.gif", description: "", nextMatches: []);
+
+  Future<void> setData() async {
+    Player response = await Fplayer;
+    Team response2 = await getTeamById(response.teamId);
+    setState(() {
+      player = response;
+      team = response2;
+      readMainNewsJson(player.name);
+    });
+    print(_myNews);
+  }
+
+  Future<void> readMainNewsJson(name) async {
+     final List response = await fetchSpecificNews(name);  
+    setState(() {
+      _myNews = response;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    readJson(widget.id);
+    Fplayer = getPlayerById(widget.id);
+    setData();
   }
 
   @override
@@ -113,7 +101,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              _myAthlete[0]["background"],
+                              player.background,
                             ),
                           ),
                         ),
@@ -134,7 +122,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                               shape: BoxShape.circle,
                             ),
                             child: Image.network(
-                              _myAthlete[0]["profile"], 
+                              player.photoUrl, 
                               fit: BoxFit.cover, 
                             ),
                           ),
@@ -157,7 +145,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                _myAthlete[0]["name"],
+                                player.name,
                                 style: Theme.of(context).textTheme.headlineSmall,
                               ),
                               Row(
@@ -165,7 +153,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Soccer Player',
+                                    '${player.sport} Player',
                                     style: Theme.of(context).textTheme.labelLarge,
                                   ),
                                   Icon(
@@ -187,7 +175,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(
-                                            builder: (context) => TeamProfileWidget(id: _myTeam[0]["id"],)
+                                            builder: (context) => TeamProfileWidget(id: player.teamId,)
                                           ),
                                         );
                                     },
@@ -199,7 +187,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: Image.network(
-                                        _myTeam[0]["profile"], 
+                                        team.profile, 
                                         fit: BoxFit.cover, 
                                       ),
                                     ),
@@ -213,12 +201,12 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                       Navigator.push(
                                         context,
                                           MaterialPageRoute(
-                                            builder: (context) => TeamProfileWidget(id: _myTeam[0]["id"],)
+                                            builder: (context) => TeamProfileWidget(id: player.teamId,)
                                           ),
                                         );
                                     },
                                     child: Text(
-                                      _myTeam[0]["name"],
+                                      team.name,
                                       style: Theme.of(context).textTheme.headlineSmall,
                                     ),
                                   ),
@@ -260,13 +248,22 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                NewsContainer(news: _myTeam[0]["news"]),
-                Container(
-                  width: double.infinity,
-                  height: 258,
-                  decoration: const BoxDecoration(),
-                  child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
-                ),
+                if(_myNews.length > 0)
+                  NewsContainer(news: _myNews),
+                if(_myNews.length == 0)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 10),
+                    child: Text(
+                      'No news found',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                // Container(
+                //   width: double.infinity,
+                //   height: 258,
+                //   decoration: const BoxDecoration(),
+                //   child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
+                // ),
               ],
             ),
           ),

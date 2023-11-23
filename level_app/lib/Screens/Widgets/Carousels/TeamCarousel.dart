@@ -50,6 +50,11 @@ class _TeamCarouselWidget extends State<TeamCarouselWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(

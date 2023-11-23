@@ -2,7 +2,7 @@ name: level_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: ">=3.0.6 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,51 +28,46 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  google_fonts: ^6.1.0
-  provider: ^6.0.5
-  carousel_slider: ^4.2.1
-  smooth_page_indicator: ^1.1.0
-  flutter_bloc: ^8.1.2
-  equatable: ^2.0.5
   bloc: ^8.1.2
-  # files and storage management
-  image_picker: ^1.0.4
-  path_provider: ^2.1.1
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  # permissions
-  permission_handler: ^11.0.1
-  share_plus: ^7.2.1
-  # firebase
-  firebase_core: ^2.20.0
+  carousel_slider: ^4.2.1
+  cloud_firestore: ^4.13.2
+  cupertino_icons: ^1.0.2
+  equatable: ^2.0.5
   firebase_auth: ^4.12.0
+  firebase_auth_platform_interface: ^7.0.5
+  firebase_core: ^2.20.0
   firebase_ui_auth: ^1.9.1
   firebase_ui_oauth_google: ^1.2.13
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.2
+  google_fonts: ^6.1.0
   google_sign_in: ^6.1.6
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  http: ^1.1.0
+  image_picker: ^1.0.4
+  path_provider: ^2.1.1
+  permission_handler: ^11.0.1
+  provider: ^6.0.5
+  share_plus: ^7.2.1
+  smooth_page_indicator: ^1.1.0
+  intl: ^0.18.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -108,7 +103,7 @@ flutter:
     - assets/testing_data/sport_data.json
     - assets/testing_data/user_data.json
     - assets/testing_data/main_news.json
-    - lib/Screens/Search/profiles.json 
+    - lib/Screens/Search/profiles.json
     - assets/images/vs.jpg
     - assets/images/events/copa.png
     - assets/images/events/arsenal.png
@@ -123,13 +118,10 @@ flutter:
     - assets/images/events/fmf-seleccion-de-mexico-logo-1.png
     - assets/images/events/united-states-national-soccer-team-logo.png
   #   - images/a_dot_ham.jpeg
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

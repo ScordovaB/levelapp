@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:level_app/Screens/Home/follow_element.dart';
 import 'package:level_app/Screens/Home/home_card.dart';
 import 'package:level_app/Screens/Widgets/app_bar_home.dart';
+import 'package:level_app/api/news_api.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import 'package:level_app/models/team_player_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -27,28 +30,26 @@ class _HomeState extends State<Home> {
     });
   }
 
-  List _teams = [];
-  List _athletes = [];
   List _mainNews = [];
 
-  Future<void> readJson() async {
-    final String response =
-        await rootBundle.loadString('assets/testing_data/sport_data.json');
-    final data = await json.decode(response);
+  late Future<List<Team>> teams;
+  late Future<List<Player>> players;
+  List<Team> fetchedTeams = [];
+  List<Player> fetchedPlayers = [];
+
+  Future<void> setData() async {
+    List<Team> t = await teams;
+    List<Player> p = await players;
     setState(() {
-      _teams = data["teams"];
-      _athletes = data["athletes"];
-      //print(_teams);
-      //print(_athletes);
+      fetchedTeams = t;
+      fetchedPlayers = p;
     });
   }
 
   Future<void> readMainNewsJson() async {
-    final String response =
-        await rootBundle.loadString('assets/testing_data/main_news.json');
-    final data = await json.decode(response);
+     final List response = await fetchNews();  
     setState(() {
-      _mainNews = data;
+      _mainNews = response;
     });
   }
 
@@ -56,7 +57,9 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     readMainNewsJson();
-    readJson();
+    teams = getTeams(limit: 8);
+    players = getPlayers(limit: 8);
+    setData();
     _pageController.addListener(_pageListener);
   }
 
@@ -80,14 +83,6 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // const Padding(
-                  //   padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
-                  //   child: AppBarLevel(),
-                  // ),
-                  // Divider(
-                  //   thickness: 2,
-                  //   color: Theme.of(context).colorScheme.primary,
-                  // ),
                   Padding(
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 20, 15, 0),
@@ -97,7 +92,7 @@ class _HomeState extends State<Home> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height:
-                              300, //MediaQuery.sizeOf(context).height * 0.400,
+                              300, 
                           decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor.value ==
                                       0xFF15571f
@@ -159,15 +154,17 @@ class _HomeState extends State<Home> {
                                           if (_mainNews.isNotEmpty)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[0]["image"],
+                                                image: _mainNews[0]["urlToImage"],
                                                 text: _mainNews[0]["title"],
+                                                date: _mainNews[0]["publishedAt"],
                                               ),
                                             ),
                                           if (_mainNews.length > 1)
                                             SizedBox(
                                               child: HomeCard(
-                                                image: _mainNews[1]["image"],
+                                                image: _mainNews[1]["urlToImage"],
                                                 text: _mainNews[1]["title"],
+                                                date: _mainNews[1]["publishedAt"],
                                               ),
                                             ),
                                         ],
@@ -271,11 +268,13 @@ class _HomeState extends State<Home> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children:
-                                  List.generate(_athletes.length, (index) {
-                                String item = _athletes[index]["profile"];
+                                  List.generate(fetchedPlayers.length, (index) {
+                                String item = fetchedPlayers[index].photoUrl;
                                 return FollowElem(
                                   image: item,
-                                  name: _athletes[index]["name"],
+                                  name: fetchedPlayers[index].name,
+                                  id: fetchedPlayers[index].id,
+                                  team: false,
                                 );
                               }),
                             ),
@@ -328,10 +327,14 @@ class _HomeState extends State<Home> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: List.generate(_teams.length, (index) {
-                                String item = _teams[index]["profile"];
+                              children: List.generate(fetchedTeams.length, (index) {
+                                String item = fetchedTeams[index].profile;
                                 return FollowElem(
-                                    image: item, name: _teams[index]["name"]);
+                                    image: item, 
+                                    name: fetchedTeams[index].name,
+                                    id: fetchedTeams[index].id,
+                                    team: true,
+                                    );
                               }),
                             ),
                           ),
