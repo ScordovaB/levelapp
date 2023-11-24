@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 class LoginHome extends StatefulWidget {
   const LoginHome({super.key, required this.title});
   final String title;
-
+  final String userId = 'mfNgT8C5TlK0WDrdwxSb';
   @override
   State<LoginHome> createState() => _LoginHomeState();
 }
@@ -132,6 +132,7 @@ class _LoginHomeState extends State<LoginHome> {
                                 MaterialPageRoute(
                                   builder: (context) => Nav(
                                     theme: Theme.of(context),
+                                    userId: widget.userId,
                                   ),
                                 ),
                               );
@@ -178,6 +179,7 @@ class _LoginHomeState extends State<LoginHome> {
                                 MaterialPageRoute(
                                   builder: (context) => Nav(
                                     theme: Theme.of(context),
+                                    userId: widget.userId,
                                   ),
                                 ),
                               );

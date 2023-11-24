@@ -42,6 +42,14 @@ class _FollowElemState extends State<FollowElem> {
                   child: Image.network(
                     widget.image,
                     fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      'https://i.gifer.com/ZKZg.gif',
+                      width: 100,
+                      height: 50,
+                      fit: BoxFit.contain,
+                    );
+                  },
                   ),
                 ),
                 SizedBox(
