@@ -10,6 +10,11 @@ class NextMatchContainer extends StatelessWidget {
     required this.team1Image,
     required this.team2Image,
   });
+  // @override
+  // void initState() {
+  //   print(team1Image);
+  //   print(team2Image);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,7 @@ class NextMatchContainer extends StatelessWidget {
               child: Text(
                 date,
                 style: TextStyle(
-                  fontSize: 16, // Adjust the font size here
+                  fontSize: 12, // Adjust the font size here
                 ),
               ),
             ),

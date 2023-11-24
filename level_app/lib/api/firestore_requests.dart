@@ -117,3 +117,22 @@ Future<List<Event>> getEvents() async {
     );
   }).toList();
 }
+
+
+Future<List<Event>> getEventsForTeam(int teamId) async {
+  // Get the team details using the provided getTeamById function
+  //Team team = await getTeamById(teamId);
+
+  // Get all events using the provided getEvents function
+  List<Event> allEvents = await getEvents();
+
+  // Filter events for the specified team ID
+  List<Event> teamEvents = allEvents.where((event) {
+    return event.homeTeamId == teamId || event.awayTeamId == teamId;
+  }).toList();
+
+  // You can customize the sorting logic based on your needs
+  teamEvents.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+  return teamEvents;
+}
