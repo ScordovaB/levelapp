@@ -8,7 +8,7 @@ import 'package:level_app/navigation.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
-
+  final String userId = 'mfNgT8C5TlK0WDrdwxSb';
   @override
   State<Login> createState() => _LoginState();
 }
@@ -149,6 +149,7 @@ class _LoginState extends State<Login> {
                                 MaterialPageRoute(
                                   builder: (context) => Nav(
                                     theme: Theme.of(context),
+                                    userId: widget.userId,
                                   ),
                                 ),
                               );

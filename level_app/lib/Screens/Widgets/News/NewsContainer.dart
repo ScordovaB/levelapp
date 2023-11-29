@@ -38,6 +38,7 @@ class _NewsContainerState extends State<NewsContainer> {
                         imageURL: newsItem['urlToImage'],
                         title: newsItem['title'],
                         subtitle: newsItem['description'],
+                        externalLink: newsItem['url'],
                       ),
                   ],
                 ),

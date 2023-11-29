@@ -4,6 +4,10 @@ import 'package:level_app/api/api_service.dart';
 import 'package:level_app/api/firestore_requests.dart';
 import 'package:level_app/models/event_model.dart';
 import 'package:intl/intl.dart';
+import 'package:level_app/api/users_requests.dart';
+import 'package:level_app/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class EventHome extends StatefulWidget {
   const EventHome({super.key});
@@ -17,12 +21,55 @@ class _EventHomeState extends State<EventHome> {
   late Future<List<Event>> events;
   List<Event> finalEvents = [];
 
+    late Future<User> fetchedUser;
+    User user = User(
+      id: "0",
+      name: "",
+      email: "",
+      teams: [],
+      players: [],
+      profile: "",
+      background: 0,
+    );
+
+  Future<void> setData() async {
+    User fetchedUserData = await fetchedUser;
+    setState(() {
+      user = fetchedUserData;
+    });
+  }
+
+  void _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      setState(() {
+        fetchedUser = getUserById(storedUserId);
+      });
+    }
+  }
+
+  Future<User> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    return getUserById(storedUserId);
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadUserId(); 
     //fetchEventAndStore(); //Uncomment this line to fetch events from API and store them in Firestore
     events = getEvents();
     fetchDataInList();
+
+    getUser().then((User user) {
+      setState(() {
+        fetchedUser = Future.value(user);
+      });
+      setData();
+    }); 
+
   }
 
   Future<void> fetchEventAndStore() async {
@@ -50,7 +97,7 @@ class _EventHomeState extends State<EventHome> {
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
-        appBar: appBarHome(context),
+        appBar: appBarHome(context, user.name),
         body: SafeArea(
   top: true,
   child: Column(

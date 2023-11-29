@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:level_app/Screens/Events/event_home.dart';
 import 'package:level_app/Screens/Home/home.dart';
 import 'package:level_app/Screens/Search/search_page.dart';
@@ -21,11 +22,11 @@ class OBGreenPalette {
   );
 }
 
-
 class Nav extends StatefulWidget {
-  final ThemeData theme; // Add a theme parameter
+  final ThemeData theme;
+  final String userId;
 
-  const Nav({super.key, required this.theme});
+  const Nav({Key? key, required this.theme, required this.userId}) : super(key: key);
 
   @override
   State<Nav> createState() => _NavState();
@@ -33,37 +34,54 @@ class Nav extends StatefulWidget {
 
 class _NavState extends State<Nav> {
   int _selectedPage = 0;
+  late String _currentUserId = ""; // Use a non-final variable
+
   final List<Widget> _pages = [
     const Home(),
     const EventHome(),
-    const SearchPage()
-    //Aqui se agregan la siguientes vistas
+    const SearchPage(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _saveUserId(widget.userId); // Save the userId to SharedPreferences
+    _loadUserId();
+  }
+
+  void _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      setState(() {
+        _currentUserId = storedUserId;
+      });
+    }
+  }
+
+  void _saveUserId(String userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userId', userId);
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    //ThemeData fullTheme = Theme.of(context);
-    
     return MaterialApp(
       title: 'Level App',
       theme: ThemeData(
         primaryColor: widget.theme.primaryColor,
         colorScheme: widget.theme.colorScheme,
-        useMaterial3: false
+        useMaterial3: false,
       ),
       home: Scaffold(
-      
-        
         body: _pages[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedPage,
-          onTap: (int index){
+          onTap: (int index) {
             setState(() {
               _selectedPage = index;
             });
-          },  
+          },
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.sports_hockey), label: 'Vs'),
@@ -78,3 +96,4 @@ class _NavState extends State<Nav> {
     );
   }
 }
+
