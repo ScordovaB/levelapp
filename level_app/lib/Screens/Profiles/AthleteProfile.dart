@@ -5,6 +5,9 @@ import 'TeamProfile.dart';
 import 'package:level_app/api/news_api.dart';
 import 'package:level_app/api/firestore_requests.dart';
 import 'package:level_app/models/team_player_model.dart';
+import 'package:level_app/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:level_app/api/users_requests.dart';
 
 class AthleteProfileWidget extends StatefulWidget {
   int id = 0;
@@ -17,20 +20,32 @@ class AthleteProfileWidget extends StatefulWidget {
 
 class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
 
+    late Future<User> fetchedUser;
+    User user = User(
+      id: "0",
+      name: "",
+      email: "",
+      teams: [],
+      players: [],
+      profile: "",
+      background: 0,
+    );
   final scaffoldKey = GlobalKey<ScaffoldState>();
   List _myNews = [];
 
   
-  late Future<Player> Fplayer;
+  late Future<Player> futurePlayer;
   Player player = Player(id: 0, name: 'Loading', sport: 'Loading', nationality: 'Loading', photoUrl: "https://i.gifer.com/ZKZg.gif", background: "https://i.gifer.com/ZKZg.gif", teamId: 0);
   Team team = Team(id: 0, name: 'Loading', sport: 'Loading', background: "https://i.gifer.com/ZKZg.gif", profile: "https://i.gifer.com/ZKZg.gif", description: "", nextMatches: []);
 
   Future<void> setData() async {
-    Player response = await Fplayer;
+    User fetchedUserData = await fetchedUser;
+    Player response = await futurePlayer;
     Team response2 = await getTeamById(response.teamId);
     setState(() {
       player = response;
       team = response2;
+      user = fetchedUserData;
       readMainNewsJson(player.name);
     });
     print(_myNews);
@@ -43,11 +58,34 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
     });
   }
 
+  void _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      setState(() {
+        fetchedUser = getUserById(storedUserId);
+      });
+    }
+  }
+
+  Future<User> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    return getUserById(storedUserId);
+  }
+
   @override
   void initState() {
     super.initState();
-    Fplayer = getPlayerById(widget.id);
-    setData();
+    _loadUserId();
+    futurePlayer = getPlayerById(widget.id);
+    getUser().then((User user) {
+      setState(() {
+        fetchedUser = Future.value(user);
+      });
+
+      setData();
+    });
   }
 
   @override
@@ -99,11 +137,20 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).highlightColor,
                           image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              player.background,
-                            ),
-                          ),
+                          fit: BoxFit.cover,
+                          image: Image.network(
+                            player.background,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  'https://www.qcnews.com/wp-content/uploads/sites/109/2022/09/1040x585-2022-0110-best-size-5-soccer-ball-5a0ad2.jpg',
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.contain,
+                                );
+                              },
+                          ).image,
+                        ),
                         ),
                       ),
                       Align(
@@ -122,8 +169,16 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                               shape: BoxShape.circle,
                             ),
                             child: Image.network(
-                              player.photoUrl, 
-                              fit: BoxFit.cover, 
+                              player.photoUrl,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    'https://as1.ftcdn.net/v2/jpg/02/59/39/46/1000_F_259394679_GGA8JJAEkukYJL9XXFH2JoC3nMguBPNH.jpg',
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.contain,
+                                  );
+                                },
                             ),
                           ),
                         ),
@@ -187,8 +242,16 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: Image.network(
-                                        team.profile, 
-                                        fit: BoxFit.cover, 
+                                        team.profile,
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (context, error, stackTrace) {
+                                            return Image.network(
+                                              'https://img.asmedia.epimg.net/resizer/QJBGgqKY4XIpohTFLoA7KMCmaMQ=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/JULRSPQBN5CF3JDHEYI2INPWQY.jpg',
+                                              width: 120,
+                                              height: 120,
+                                              fit: BoxFit.contain,
+                                            );
+                                          },
                                       ),
                                     ),
                                   ),
@@ -216,20 +279,36 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                 padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    print('Button pressed ...');
+                                    if (user.players.contains(widget.id)) {
+                                      removePlayerFromUser(user.id, widget.id).then((value) {
+                                        setState(() {
+                                          user.players.remove(widget.id);
+                                        });
+                                      });
+                                    } else {
+                                      addPlayerToUser(user.id, widget.id).then((value) {
+                                        setState(() {
+                                          user.players.add(widget.id);
+                                        });
+                                      });
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).hintColor,
+                                    backgroundColor: user.players.contains(widget.id)
+                                        ? Colors.grey 
+                                        : Theme.of(context).hintColor,
                                     elevation: 3,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                   child: Text(
-                                    'Follow',
+                                    user.players.contains(widget.id) ? 'Following' : 'Follow',
                                     style: TextStyle(
                                       fontFamily: 'Readex Pro',
-                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                      color: user.players.contains(widget.id)
+                                          ? Colors.white 
+                                          : Theme.of(context).scaffoldBackgroundColor,
                                     ),
                                   ),
                                 ),

@@ -4,7 +4,7 @@ class User{
   final String email;
   final List<dynamic> teams;
   final List<dynamic> players;
-  final int profile;
+  final String profile;
   final int background;
   User({
     required this.id,

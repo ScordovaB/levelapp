@@ -3,10 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'CarouselItem.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:level_app/models/team_player_model.dart';
+
 
 class TeamCarouselWidget extends StatefulWidget {
-  List teams = [];
   TeamCarouselWidget({super.key, required this.teams});
+
+  List<Team> teams = [];
 
   @override
   State<TeamCarouselWidget> createState() => _TeamCarouselWidget();
@@ -19,34 +22,14 @@ class _TeamCarouselWidget extends State<TeamCarouselWidget> {
   int height = 60;
   double heightOut = 80;
 
-  List _allTeams = [];
-  List _myTeams = [];
-
-  Future<void> readJson(List teams) async {
-    final String response = await rootBundle.loadString('assets/testing_data/sport_data.json');
-    final data = await json.decode(response);
-    setState(() {
-      _allTeams = data["teams"];
-      _myTeams = getTeams(teams, _allTeams);
-    });
-  }
-
-  List getTeams(teams, teamsData){
-    List myTeams = [];
-    for (var j = 0; j < teams.length; j++) {
-      for (var i = 0; i < teamsData.length; i++) {
-        if(teams[j] == teamsData[i]["id"]) {
-          myTeams.add(teamsData[i]);
-        }
-      }
-    }
-    return myTeams;
-  }
+  List<Team> myTeams = [];
 
   @override
   void initState() {
     super.initState();
-    readJson(widget.teams);
+    print(widget.teams.length);
+    myTeams = widget.teams;
+    print(myTeams.length);
   }
 
   @override
@@ -61,12 +44,12 @@ class _TeamCarouselWidget extends State<TeamCarouselWidget> {
         width: double.infinity,
         height: 149,
         child: CarouselSlider(
-          items: _myTeams.map((team) {
+          items: myTeams.map((team) {
             return buildItem(
               context,
-              team['profile'],
-              team['name'],
-              team['id'],
+              team.profile,
+              team.name,
+              team.id,
               true
             );
           }).toList(),

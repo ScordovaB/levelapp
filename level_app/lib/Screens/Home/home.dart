@@ -22,8 +22,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late String _currentUserId = ""; // Use a non-final variable
-
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -40,11 +38,11 @@ class _HomeState extends State<Home> {
   late Future<User> fetchedUser;
   User user = User(
     id: "0",
-    name: "User",
-    email: "user@email.com",
+    name: "",
+    email: "",
     teams: [],
     players: [],
-    profile: 0,
+    profile: "",
     background: 0,
   );
 
@@ -54,17 +52,14 @@ class _HomeState extends State<Home> {
   List<Player> fetchedPlayers = [];
 
   Future<void> setData() async {
-    User user = await fetchedUser;
+    User fetchedUserData = await fetchedUser;
     List<Team> t = await teams;
     List<Player> p = await players;
     setState(() {
-      user = user;
+      user = fetchedUserData;
       fetchedTeams = t;
       fetchedPlayers = p;
     });
-    print("------------------");
-    print(user.name);
-    print("------------------");
   }
 
   Future<void> readMainNewsJson() async {
@@ -92,7 +87,6 @@ class _HomeState extends State<Home> {
     teams = getTeams();
     players = getPlayers(limit: 5);
 
-    // Wait for fetchedUser Future to complete before calling setData
     getUser().then((User user) {
       setState(() {
         fetchedUser = Future.value(user);
@@ -120,7 +114,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Scaffold(
-        appBar: appBarHome(context),
+        appBar: appBarHome(context, user.name),
         key: scaffoldKey,
         body: SafeArea(
           top: true,

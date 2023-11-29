@@ -109,3 +109,82 @@ Future<List<Event>> getEvents() async {
     );
   }).toList();
 }
+
+Future<List<Team>> getTeamsByIds(List<dynamic> teamIds) async {
+  List<Team> teams = [];
+  for (int teamId in teamIds) {
+    Team team = await getTeamById(teamId);
+    teams.add(team);
+    }
+  return teams;
+}
+
+Future<List<Player>> getPlayersByIds(List<dynamic> playerIds) async {
+  List<Player> players = [];
+  for (int playerId in playerIds) {
+    print("-------------------");
+    print(playerId);
+    print("-------------------");
+    Player player = await getPlayerById(playerId);
+    players.add(player);
+  }
+  return players;
+}
+
+Future<void> addTeamToUser(String userId, int teamId) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  DocumentSnapshot userSnapshot = await userRef.get();
+  Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+  List<dynamic> teams = userData['teams'] ?? [];
+
+  if (!teams.contains(teamId)) {
+    teams.add(teamId);
+    await userRef.update({'teams': teams});
+  }
+}
+
+Future<void> removeTeamFromUser(String userId, int teamId) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  DocumentSnapshot userSnapshot = await userRef.get();
+  Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+  if (userData.containsKey('teams')) {
+    List<dynamic> teams = userData['teams'];
+
+    teams.remove(teamId);
+
+    await userRef.update({'teams': teams});
+  }
+}
+
+Future<void> addPlayerToUser(String userId, int playerId) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  DocumentSnapshot userSnapshot = await userRef.get();
+  Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+  List<dynamic> players = userData['players'] ?? [];
+
+  if (!players.contains(playerId)) {
+    players.add(playerId);
+    await userRef.update({'players': players});
+  }
+}
+
+Future<void> removePlayerFromUser(String userId, int playerId) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  DocumentSnapshot userSnapshot = await userRef.get();
+  Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+  if (userData.containsKey('players')) {
+    List<dynamic> players = userData['players'];
+
+    players.remove(playerId);
+
+    await userRef.update({'players': players});
+  }
+}

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:level_app/Screens/Profiles/UserProfile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-AppBar appBarHome(BuildContext context) {
+AppBar appBarHome(BuildContext context, String name) {
   return AppBar(
     toolbarHeight: 75,
     backgroundColor: Theme.of(context).colorScheme.background,
@@ -22,7 +22,7 @@ AppBar appBarHome(BuildContext context) {
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Text(
-            "Welcome back, Jazmin!",
+            "Welcome back, $name!",
             style: TextStyle(
                 fontSize: 12, color: Theme.of(context).unselectedWidgetColor),
           ),

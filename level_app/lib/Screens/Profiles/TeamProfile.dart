@@ -1,22 +1,36 @@
-  import 'package:level_app/Screens/Widgets/Carousels/AthletesCarousel.dart';
-  import 'package:flutter/material.dart';
-  import '../Widgets/News/NewsContainer.dart';
-  import '../Widgets/NextMacthes/NextMacthesColumn.dart';
-  import 'package:flutter/services.dart' show rootBundle;
-  import 'dart:convert';
-  import 'package:level_app/api/news_api.dart';
-  import 'package:level_app/api/firestore_requests.dart';
-  import 'package:level_app/models/team_player_model.dart';
-
+import 'package:level_app/Screens/Widgets/Carousels/AthletesCarousel.dart';
+import 'package:flutter/material.dart';
+import '../Widgets/News/NewsContainer.dart';
+import '../Widgets/NextMacthes/NextMacthesColumn.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+import 'package:level_app/api/news_api.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import 'package:level_app/models/team_player_model.dart';
+import 'package:level_app/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:level_app/api/users_requests.dart';
+  
   class TeamProfileWidget extends StatefulWidget {
     int id = 0;
-    TeamProfileWidget({super.key, required this.id});
+    TeamProfileWidget({super.key, required this.id,});
 
     @override
     _TeamProfileWidgetState createState() => _TeamProfileWidgetState();
   }
 
   class _TeamProfileWidgetState extends State<TeamProfileWidget> {
+
+    late Future<User> fetchedUser;
+    User user = User(
+      id: "0",
+      name: "",
+      email: "",
+      teams: [],
+      players: [],
+      profile: "",
+      background: 0,
+    );
 
     final scaffoldKey = GlobalKey<ScaffoldState>();
     List _myNews = [];
@@ -27,14 +41,32 @@
     late List<Player> players = [];
 
     Future<void> setData() async {
+      User fetchedUserData = await fetchedUser;
       Team response = await futureTeam;
       List<Player> response2 = await getPlayersByTeamId(response.id);
       setState(() {
         team = response;
         players = response2;
+        user = fetchedUserData;
         readMainNewsJson(team.name);
       });
     }
+
+    void _loadUserId() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String storedUserId = prefs.getString('userId') ?? '';
+      if (storedUserId.isNotEmpty) {
+        setState(() {
+          fetchedUser = getUserById(storedUserId);
+        });
+      }
+    }
+
+  Future<User> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    return getUserById(storedUserId);
+  }
 
     Future<void> readMainNewsJson(name) async {
       final List response = await fetchSpecificNews(name);  
@@ -46,8 +78,15 @@
     @override
     void initState() {
       super.initState();
+      _loadUserId();
       futureTeam = getTeamById(widget.id);
-      setData();
+      getUser().then((User user) {
+        setState(() {
+          fetchedUser = Future.value(user);
+        });
+
+        setData();
+      });
       
     }
 
@@ -102,9 +141,18 @@
                             color: Colors.greenAccent,
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(
+                              image: Image.network(
                                 team.background,
-                              ),
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                    return Image.network(
+                                      'https://www.qcnews.com/wp-content/uploads/sites/109/2022/09/1040x585-2022-0110-best-size-5-soccer-ball-5a0ad2.jpg',
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
+                              ).image,
                             ),
                           ),
                         ),
@@ -124,10 +172,16 @@
                                 shape: BoxShape.circle,
                               ),
                               child: Image.network(
-                                team.profile, 
-                                fit: BoxFit.cover,
-                                width: 120,
-                                height: 120,
+                                team.profile,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                    return Image.network(
+                                      'https://img.asmedia.epimg.net/resizer/QJBGgqKY4XIpohTFLoA7KMCmaMQ=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/JULRSPQBN5CF3JDHEYI2INPWQY.jpg',
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
                               ),
                             ),
                           ),
@@ -174,20 +228,36 @@
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    print('Button pressed ...');
+                                    if (user.teams.contains(widget.id)) {
+                                      removeTeamFromUser(user.id, widget.id).then((value) {
+                                        setState(() {
+                                          user.teams.remove(widget.id);
+                                        });
+                                      });
+                                    } else {
+                                      addTeamToUser(user.id, widget.id).then((value) {
+                                        setState(() {
+                                          user.teams.add(widget.id);
+                                        });
+                                      });
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).hintColor,
+                                    backgroundColor: user.teams.contains(widget.id)
+                                        ? Colors.grey 
+                                        : Theme.of(context).hintColor,
                                     elevation: 3,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                   child: Text(
-                                    'Follow',
+                                    user.teams.contains(widget.id) ? 'Following' : 'Follow',
                                     style: TextStyle(
                                       fontFamily: 'Readex Pro',
-                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                      color: user.teams.contains(widget.id)
+                                          ? Colors.white 
+                                          : Theme.of(context).scaffoldBackgroundColor,
                                     ),
                                   ),
                                 ),

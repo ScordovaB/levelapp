@@ -45,7 +45,18 @@ class ProfileList extends StatelessWidget {
           // Render team item
           Team team = profiles[index] as Team;
           return ListTile(
-            leading: Image.network(team.profile, width: 50, height: 50),
+            leading: Image.network(
+              team.profile,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://img.asmedia.epimg.net/resizer/QJBGgqKY4XIpohTFLoA7KMCmaMQ=/1472x1104/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/JULRSPQBN5CF3JDHEYI2INPWQY.jpg',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.contain,
+                  );
+                },
+            ),
             title: Text(team.name),
             subtitle: Text('${team.sport}\nTeam'),
             onTap: () {
@@ -61,7 +72,16 @@ class ProfileList extends StatelessWidget {
           // Render player item
           Player player = profiles[index] as Player;
           return ListTile(
-            leading: Image.network(player.photoUrl, width: 50, height: 50),
+            leading: Image.network(
+              player.photoUrl,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://as1.ftcdn.net/v2/jpg/02/59/39/46/1000_F_259394679_GGA8JJAEkukYJL9XXFH2JoC3nMguBPNH.jpg',
+                    fit: BoxFit.contain,
+                  );
+                },
+            ),
             title: Text(player.name),
             subtitle: Text('Player\n : ${player.sport}'),
             onTap: () {

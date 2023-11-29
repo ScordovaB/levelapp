@@ -102,7 +102,7 @@ class NewsCard extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColorDark,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
               ),
               child: const Text(
                 'Read More',
