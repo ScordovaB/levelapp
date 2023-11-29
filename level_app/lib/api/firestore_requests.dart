@@ -106,12 +106,33 @@ Future<List<Event>> getEvents() async {
       league: data['league'],
       leagueImage: data['leagueImage'],
       homeTeam: data['homeTeam'],
+      homeTeamId: data['homeTeamId'],
       homeTeamImage: data['homeTeamImage'],
       awayTeam: data['awayTeam'],
+      awayTeamId: data['awayTeamId'],
       awayTeamImage: data['awayTeamImage'],
       timestamp: data['timestamp'],
       scoreHome: data['scoreHome'],
       scoreAway: data['scoreAway'],
     );
   }).toList();
+}
+
+
+Future<List<Event>> getEventsForTeam(int teamId) async {
+  // Get the team details using the provided getTeamById function
+  //Team team = await getTeamById(teamId);
+
+  // Get all events using the provided getEvents function
+  List<Event> allEvents = await getEvents();
+
+  // Filter events for the specified team ID
+  List<Event> teamEvents = allEvents.where((event) {
+    return event.homeTeamId == teamId || event.awayTeamId == teamId;
+  }).toList();
+
+  // You can customize the sorting logic based on your needs
+  teamEvents.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+  return teamEvents;
 }

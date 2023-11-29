@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:level_app/models/event_model.dart';
 import 'NextMatchContainer.dart';
+import 'package:intl/intl.dart';
 
 class NextMatchesColumn extends StatefulWidget {
-  List matches = [];
+  List<Event> matches = [];
   List teams = [];
 
   NextMatchesColumn({super.key, required this.matches, required this.teams});
@@ -12,10 +14,9 @@ class NextMatchesColumn extends StatefulWidget {
 }
 
 class _NextMatchesColumnState extends State<NextMatchesColumn> {
-
-  String getTeam(id, teams){
+  String getTeam(id,List teams) {
     for (var i = 0; i < teams.length; i++) {
-      if(id == teams[i]["id"]) {
+      if (id == teams[i]["id"]) {
         return teams[i]["profile"];
       }
     }
@@ -65,10 +66,11 @@ class _NextMatchesColumnState extends State<NextMatchesColumn> {
               children: [
                 for (var match in widget.matches)
                   NextMatchContainer(
-                    date: match['date'],
-                    team1Image: getTeam(match["home_team"], widget.teams),
-                    team2Image: getTeam(match["away_team"], widget.teams),
-                  ),              ],
+                    date: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.fromMillisecondsSinceEpoch(match.timestamp * 1000)),  // Adjust based on your Event class properties
+                    team1Image: match.homeTeamImage,
+                    team2Image: match.awayTeamImage,
+                  ),
+              ],
             ),
           ),
         ),

@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
       List<Team> teams = await fetchFootballTeams(
           'https://v3.football.api-sports.io/teams?league=39&season=2023');
       List<Player> players = await fetchFootballPlayers(
-          'https://v3.football.api-sports.io/players?league=39&season=2023');
+          'https://v3.football.api-sports.io/players?league=39&season=2023&team=50', pageCount: 2);
       await storeTeams(teams);
       await storePlayers(players);
     } catch (e) {
