@@ -1,5 +1,6 @@
 import 'package:level_app/Screens/Widgets/Carousels/AthletesCarousel.dart';
 import 'package:flutter/material.dart';
+import 'package:level_app/models/event_model.dart';
 import '../Widgets/News/NewsContainer.dart';
 import '../Widgets/NextMacthes/NextMacthesColumn.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -10,7 +11,7 @@ import 'package:level_app/models/team_player_model.dart';
 import 'package:level_app/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:level_app/api/users_requests.dart';
-  
+
   class TeamProfileWidget extends StatefulWidget {
     int id = 0;
     TeamProfileWidget({super.key, required this.id,});
@@ -34,6 +35,8 @@ import 'package:level_app/api/users_requests.dart';
 
     final scaffoldKey = GlobalKey<ScaffoldState>();
     List _myNews = [];
+    late List<Event> teamEvents = [];
+
     
     Team team = Team(id: 0, name: 'Loading', sport: 'Loading', background: "https://i.gifer.com/ZKZg.gif", profile: "https://i.gifer.com/ZKZg.gif", description: "", nextMatches: []);
     late Future<Team> futureTeam;
@@ -44,10 +47,12 @@ import 'package:level_app/api/users_requests.dart';
       User fetchedUserData = await fetchedUser;
       Team response = await futureTeam;
       List<Player> response2 = await getPlayersByTeamId(response.id);
+      List<Event> teamEventsResponse = await getEventsForTeam(response.id);
       setState(() {
         team = response;
         players = response2;
         user = fetchedUserData;
+        teamEvents = teamEventsResponse;
         readMainNewsJson(team.name);
       });
     }
@@ -319,12 +324,12 @@ import 'package:level_app/api/users_requests.dart';
                       ],
                     ),
                   ),
-                // Container(
-                //     width: double.infinity,
-                //     height: 258,
-                //     decoration: const BoxDecoration(),
-                //     child: NextMatchesColumn(matches: _myTeam[0]["next_matches"], teams: _allTeams),
-                //   ),
+                Container(
+                    width: double.infinity,
+                    height: 258,
+                    decoration: const BoxDecoration(),
+                    child: NextMatchesColumn(matches: teamEvents, teams:[]),
+                  ),
                 ],
               ),
             ),
