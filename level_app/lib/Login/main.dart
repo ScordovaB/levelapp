@@ -7,6 +7,7 @@ import 'package:level_app/Login/signup.dart';
 import 'package:level_app/firebase_options.dart';
 import 'package:level_app/navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -51,15 +52,45 @@ class _LoginHomeState extends State<LoginHome> {
 
   Future<void> _handleGoogleSignIn() async {
     try {
-      await _googleSignIn.signIn();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Nav(
-            theme: Theme.of(context),
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+        String email =
+            googleUser.email; // El correo electrónico siempre está disponible
+        var usersCollection = FirebaseFirestore.instance.collection('users');
+        var docSnapshot = await usersCollection.doc(email).get();
+
+        if (!docSnapshot.exists) {
+          String name = googleUser.displayName ?? 'Common User';
+
+          await usersCollection.doc(email).set({
+            'name': name,
+            'email': email,
+            'password': 'googleAUTH',
+            'players': {},
+            'teams': {}
+          });
+        }
+
+        // Navegar a la pantalla principal después de la autenticación exitosa
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Nav(
+              theme: Theme.of(context),
+            ),
           ),
-        ),
-      );
+        );
+      }
     } catch (error) {
       print(error);
     }
