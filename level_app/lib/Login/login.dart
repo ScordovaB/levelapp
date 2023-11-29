@@ -6,6 +6,8 @@ import 'package:level_app/Login/signup.dart';
 import 'package:level_app/Login/main.dart';
 import 'package:level_app/Screens/Profiles/UserProfile.dart';
 import 'package:level_app/navigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -39,7 +41,19 @@ class _LoginState extends State<Login> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      {
+
+      var userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: _emailController.text)
+          .limit(1)
+          .get();
+
+      if (userQuery.docs.isNotEmpty) {
+        String documentId = userQuery.docs.first.id;
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', documentId);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -48,6 +62,10 @@ class _LoginState extends State<Login> {
             ),
           ),
         );
+      } else {
+        setState(() {
+          _errorMessage = "User not found in database";
+        });
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

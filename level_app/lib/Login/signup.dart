@@ -9,6 +9,7 @@ import 'package:level_app/Login/termsAndConditions.dart';
 import 'package:level_app/navigation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -56,13 +57,25 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future userDetails(String name, String email, String password) async {
-    await FirebaseFirestore.instance.collection('users').add({
+    DocumentReference docRef =
+        await FirebaseFirestore.instance.collection('users').add({
       'name': name,
       'email': email,
       'password': password,
       'teams': {},
-      'players': {}
+      'players': {},
+      'userId': ''
     });
+
+    String userId = docRef.id;
+    await docRef.update({
+      'userId': userId,
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+
+    print('Local Storage: UserId: ${prefs.getString('userId')}');
   }
 
   bool passwordIsConfirmed() {

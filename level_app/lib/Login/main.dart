@@ -46,7 +46,8 @@ class _LoginHomeState extends State<LoginHome> {
       'email': email,
       'password': password,
       'teams': {},
-      'players': {}
+      'players': {},
+      'userId': ''
     });
   }
 
