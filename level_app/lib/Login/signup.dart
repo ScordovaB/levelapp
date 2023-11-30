@@ -21,6 +21,7 @@ class _SignUpState extends State<SignUp> {
   bool _passwordVisible1 = false;
   bool _passwordVisible2 = false;
   bool _passwordIsConfirmed = false;
+  String _signupErrorMessage = '';
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -43,15 +44,42 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> _signup(Permission permission, BuildContext context) async {
-    if (passwordIsConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-      checkPermission(permission, context);
+    try {
+      setState(() {
+        _signupErrorMessage = '';
+      });
+      if (_nameController.text.trim().isEmpty ||
+          _emailController.text.trim().isEmpty ||
+          _passwordController.text.trim().isEmpty ||
+          _passwordController2.text.trim().isEmpty) {
+        setState(() {
+          _signupErrorMessage = 'Please fill in all fields.';
+        });
+        return;
+      } else if (passwordIsConfirmed()) {
+        var existingUser = await FirebaseAuth.instance
+            .fetchSignInMethodsForEmail(_emailController.text.trim());
 
-      // user details
-      userDetails(_nameController.text.trim(), _emailController.text.trim(),
-          _passwordController.text.trim());
+        if (existingUser.isNotEmpty) {
+          setState(() {
+            _signupErrorMessage =
+                'An account already exists for this email. Please log in.';
+          });
+          return;
+        }
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+        checkPermission(permission, context);
+
+        userDetails(_nameController.text.trim(), _emailController.text.trim(),
+            _passwordController.text.trim());
+      }
+    } catch (e) {
+      setState(() {
+        _signupErrorMessage = e.toString();
+      });
     }
   }
 
@@ -367,6 +395,15 @@ class _SignUpState extends State<SignUp> {
                               ],
                             ),
                           ),
+                          SizedBox(height: 10.0),
+                          if (_signupErrorMessage.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                _signupErrorMessage,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
                           SizedBox(height: 10.0),
                           if ((_passwordController.text.trim() !=
                                   _passwordController2.text.trim()) &

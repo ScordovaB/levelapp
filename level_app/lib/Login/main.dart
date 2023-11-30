@@ -19,14 +19,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const LoginHome(title: 'Login Home'),
+      home: const LoginHome(),
     );
   }
 }
 
 class LoginHome extends StatefulWidget {
-  const LoginHome({super.key, required this.title});
-  final String title;
+  const LoginHome({super.key});
   @override
   State<LoginHome> createState() => _LoginHomeState();
 }
