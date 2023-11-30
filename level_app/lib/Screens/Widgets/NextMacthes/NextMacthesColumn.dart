@@ -69,6 +69,8 @@ class _NextMatchesColumnState extends State<NextMatchesColumn> {
                     date: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.fromMillisecondsSinceEpoch(match.timestamp * 1000)),  // Adjust based on your Event class properties
                     team1Image: match.homeTeamImage,
                     team2Image: match.awayTeamImage,
+                    teamName1: match.homeTeam,
+                    teamName2: match.awayTeam,
                   ),
               ],
             ),

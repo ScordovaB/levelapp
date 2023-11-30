@@ -98,12 +98,15 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                     const SizedBox(height: 30), // Espacio adicional
-
+                    const Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
                     SizedBox(
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
+                          //backgroundColor: Theme.of(context).primaryColor,
                         ),
                         onPressed: () {
                           _logout(context);
