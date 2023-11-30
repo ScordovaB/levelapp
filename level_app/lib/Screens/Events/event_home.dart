@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:level_app/api/users_requests.dart';
 import 'package:level_app/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 class EventHome extends StatefulWidget {
   const EventHome({super.key});
@@ -15,10 +18,42 @@ class EventHome extends StatefulWidget {
   State<EventHome> createState() => _EventHomeState();
 }
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('level_icon');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+Future<void> showNotification(String title, String body) async {
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails('level_app_channel_id', 'level_app_channel',
+          importance: Importance.max, priority: Priority.high);
+
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidNotificationDetails);
+
+  await flutterLocalNotificationsPlugin.show(
+    1,
+    title,
+    body,
+    notificationDetails,
+  );
+}
+
 class _EventHomeState extends State<EventHome> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Event>> events;
   List<Event> finalEvents = [];
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   late Future<User> fetchedUser;
   User user = User(
@@ -88,14 +123,36 @@ class _EventHomeState extends State<EventHome> {
 
     // Filter out events that have already been played
     List<Event> upcomingEvents = fetchedEvents
-        .where((event) => DateTime.fromMillisecondsSinceEpoch(event.timestamp * 1000)
-            .isAfter(currentDate))
+        .where((event) =>
+            DateTime.fromMillisecondsSinceEpoch(event.timestamp * 1000)
+                .isAfter(currentDate))
+        .toList();
+
+    // Filter out events that are on the same day as today
+    List<Event> todayEvents = fetchedEvents
+        .where((event) {
+          DateTime eventDate =
+              DateTime.fromMillisecondsSinceEpoch(event.timestamp * 1000);
+          return eventDate.year == currentDate.year &&
+              eventDate.month == currentDate.month &&
+              eventDate.day == currentDate.day;
+        })
         .toList();
 
     setState(() {
       //
       finalEvents = upcomingEvents;
+      print(todayEvents);
     });
+
+        // Show notification for each event
+    List<String> todayEventsText = [];
+    for (Event event in todayEvents) {
+      
+      todayEventsText.add("Today's match: ${event.homeTeam} vs ${event.awayTeam}");
+      
+    }
+    showNotification("MATCH ALERT!", todayEventsText.join("\n"));
   }
 
   @override

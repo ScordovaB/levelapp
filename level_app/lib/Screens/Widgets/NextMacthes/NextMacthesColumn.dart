@@ -50,7 +50,7 @@ class _NextMatchesColumnState extends State<NextMatchesColumn> {
 
   void scheduleDailyNotification() async {
     tzdata.initializeTimeZones();
-    final location = tz.getLocation('America/New_York');
+    final location = tz.getLocation('America/Mexico_City');
 
     final notificationTime = tz.TZDateTime(
       location,
