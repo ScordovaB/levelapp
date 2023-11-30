@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
-  final String userId = 'TVR7vygHwtnekXtDL0P4';
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -62,9 +61,11 @@ class _SignUpState extends State<SignUp> {
       'name': name,
       'email': email,
       'password': password,
-      'teams': {},
-      'players': {},
-      'userId': ''
+      'teams': [],
+      'players': [],
+      'userId': '',
+      'profile': "",
+      'background': 1,
     });
 
     String userId = docRef.id;
@@ -98,7 +99,6 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(
           builder: (context) => Nav(
             theme: Theme.of(context),
-            userId: widget.userId,
           ),
         ),
       );

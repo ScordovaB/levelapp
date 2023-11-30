@@ -30,7 +30,6 @@ environment:
 dependencies:
   bloc: ^8.1.2
   carousel_slider: ^4.2.1
-  cloud_firestore: ^4.13.2
   cupertino_icons: ^1.0.2
   equatable: ^2.0.5
   firebase_auth: ^4.12.0

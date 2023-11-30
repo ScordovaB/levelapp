@@ -11,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
-  final String userId = 'TVR7vygHwtnekXtDL0P4';
   @override
   State<Login> createState() => _LoginState();
 }
