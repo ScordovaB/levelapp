@@ -3,8 +3,14 @@ import 'package:level_app/models/event_model.dart';
 import '../models/team_player_model.dart';
 
 
-Future<List<Team>> getTeams() async {
-  QuerySnapshot teamsSnapshot = await FirebaseFirestore.instance.collection('teams').get();
+Future<List<Team>> getTeams({int limit = -1}) async {
+  QuerySnapshot teamsSnapshot;
+  if (limit > 0) {
+    teamsSnapshot = await FirebaseFirestore.instance.collection('teams').limit(limit).get();
+  } else {
+    teamsSnapshot = await FirebaseFirestore.instance.collection('teams').get();
+  }
+
   return teamsSnapshot.docs.map((doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Team(
@@ -100,8 +106,10 @@ Future<List<Event>> getEvents() async {
       league: data['league'],
       leagueImage: data['leagueImage'],
       homeTeam: data['homeTeam'],
+      homeTeamId: data['homeTeamId'],
       homeTeamImage: data['homeTeamImage'],
       awayTeam: data['awayTeam'],
+      awayTeamId: data['awayTeamId'],
       awayTeamImage: data['awayTeamImage'],
       timestamp: data['timestamp'],
       scoreHome: data['scoreHome'],
@@ -187,4 +195,22 @@ Future<void> removePlayerFromUser(String userId, int playerId) async {
 
     await userRef.update({'players': players});
   }
+}
+
+Future<List<Event>> getEventsForTeam(int teamId) async {
+  // Get the team details using the provided getTeamById function
+  //Team team = await getTeamById(teamId);
+
+  // Get all events using the provided getEvents function
+  List<Event> allEvents = await getEvents();
+
+  // Filter events for the specified team ID
+  List<Event> teamEvents = allEvents.where((event) {
+    return event.homeTeamId == teamId || event.awayTeamId == teamId;
+  }).toList();
+
+  // You can customize the sorting logic based on your needs
+  teamEvents.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+  return teamEvents;
 }

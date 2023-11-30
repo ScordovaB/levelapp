@@ -84,16 +84,15 @@ class _HomeState extends State<Home> {
     super.initState();
     _loadUserId();
     readMainNewsJson();
-    teams = getTeams();
-    players = getPlayers(limit: 5);
-
     getUser().then((User user) {
       setState(() {
         fetchedUser = Future.value(user);
       });
       setData();
     });
-
+    teams = getTeams(limit: 8);
+    players = getPlayers(limit: 8);
+    setData();
     _pageController.addListener(_pageListener);
   }
 
