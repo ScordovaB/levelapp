@@ -1,5 +1,5 @@
 class User{
-  final String id;
+  final String userId;
   final String name;
   final String email;
   final List<dynamic> teams;
@@ -7,7 +7,7 @@ class User{
   final String profile;
   final int background;
   User({
-    required this.id,
+    required this.userId,
     required this.name,
     required this.email,
     required this.teams,

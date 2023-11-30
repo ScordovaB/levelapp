@@ -24,7 +24,7 @@ import 'package:level_app/api/users_requests.dart';
 
     late Future<User> fetchedUser;
     User user = User(
-      id: "0",
+      userId: "0",
       name: "",
       email: "",
       teams: [],
@@ -234,13 +234,13 @@ import 'package:level_app/api/users_requests.dart';
                                 ElevatedButton(
                                   onPressed: () {
                                     if (user.teams.contains(widget.id)) {
-                                      removeTeamFromUser(user.id, widget.id).then((value) {
+                                      removeTeamFromUser(user.userId, widget.id).then((value) {
                                         setState(() {
                                           user.teams.remove(widget.id);
                                         });
                                       });
                                     } else {
-                                      addTeamToUser(user.id, widget.id).then((value) {
+                                      addTeamToUser(user.userId, widget.id).then((value) {
                                         setState(() {
                                           user.teams.add(widget.id);
                                         });

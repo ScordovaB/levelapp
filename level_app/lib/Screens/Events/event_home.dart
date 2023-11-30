@@ -23,7 +23,7 @@ class _EventHomeState extends State<EventHome> {
 
     late Future<User> fetchedUser;
     User user = User(
-      id: "0",
+      userId: "0",
       name: "",
       email: "",
       teams: [],

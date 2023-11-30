@@ -21,7 +21,7 @@ class FollowElem extends StatefulWidget {
 class _FollowElemState extends State<FollowElem> {
   late Future<User> fetchedUser;
   User user = User(
-    id: "0",
+    userId: "0",
     name: "",
     email: "",
     teams: [],
@@ -126,13 +126,13 @@ class _FollowElemState extends State<FollowElem> {
                 onPressed: () {
                   if(widget.team) {
                     if (isFollowed) {
-                      removeTeamFromUser(user.id, widget.id).then((value) {
+                      removeTeamFromUser(user.userId, widget.id).then((value) {
                         setState(() {
                           user.teams.remove(widget.id);
                         });
                       });
                     } else {
-                      addTeamToUser(user.id, widget.id).then((value) {
+                      addTeamToUser(user.userId, widget.id).then((value) {
                         setState(() {
                           user.teams.add(widget.id);
                         });
@@ -140,13 +140,13 @@ class _FollowElemState extends State<FollowElem> {
                     }                    
                   } else {
                     if (isFollowed) {
-                      removePlayerFromUser(user.id, widget.id).then((value) {
+                      removePlayerFromUser(user.userId, widget.id).then((value) {
                         setState(() {
                           user.players.remove(widget.id);
                         });
                       });
                     } else {
-                      addPlayerToUser(user.id, widget.id).then((value) {
+                      addPlayerToUser(user.userId, widget.id).then((value) {
                         setState(() {
                           user.players.add(widget.id);
                         });

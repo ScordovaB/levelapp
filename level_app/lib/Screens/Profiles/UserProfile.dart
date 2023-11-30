@@ -23,7 +23,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
 
   late Future<User> fetchedUser;
   User user = User(
-    id: "0",
+    userId: "0",
     name: "",
     email: "",
     teams: [],

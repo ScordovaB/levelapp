@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
 
   late Future<User> fetchedUser;
   User user = User(
-    id: "0",
+    userId: "0",
     name: "",
     email: "",
     teams: [],

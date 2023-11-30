@@ -22,7 +22,7 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
 
     late Future<User> fetchedUser;
     User user = User(
-      id: "0",
+      userId: "0",
       name: "",
       email: "",
       teams: [],
@@ -280,13 +280,13 @@ class _AthleteProfileWidgetState extends State<AthleteProfileWidget> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (user.players.contains(widget.id)) {
-                                      removePlayerFromUser(user.id, widget.id).then((value) {
+                                      removePlayerFromUser(user.userId, widget.id).then((value) {
                                         setState(() {
                                           user.players.remove(widget.id);
                                         });
                                       });
                                     } else {
-                                      addPlayerToUser(user.id, widget.id).then((value) {
+                                      addPlayerToUser(user.userId, widget.id).then((value) {
                                         setState(() {
                                           user.players.add(widget.id);
                                         });
