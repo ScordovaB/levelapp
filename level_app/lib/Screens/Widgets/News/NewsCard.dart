@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class NewsCard extends StatelessWidget {
   final String imageURL;
   final String title;
   final String subtitle;
+  final String externalLink; // Add the external link property
 
   NewsCard({
     required this.imageURL,
     required this.title,
     required this.subtitle,
+    required this.externalLink,
   });
 
   @override
@@ -30,6 +33,14 @@ class NewsCard extends StatelessWidget {
               height: 200,
               fit: BoxFit.cover,
               alignment: const Alignment(-1.00, 0.00),
+              errorBuilder: (context, error, stackTrace) {
+                return Image.network(
+                  'https://img.freepik.com/vector-premium/banners-television-noticias-ultima-hora-sobre-fondo-blanco_714603-853.jpg', // Provide the path to your placeholder image
+                  width: 365,
+                  height: 200,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
           ),
           Align(
@@ -76,7 +87,7 @@ class NewsCard extends StatelessWidget {
                     maxLines: 4,
                     style: const TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 12,                      
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -87,11 +98,11 @@ class NewsCard extends StatelessWidget {
             alignment: const AlignmentDirectional(-0.91, 0.90),
             child: ElevatedButton(
               onPressed: () {
-                print('Button pressed ...');
+                _launchURL(externalLink);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColorDark,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
               ),
               child: const Text(
                 'Read More',
@@ -106,5 +117,13 @@ class NewsCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Future<void> _launchURL(String url) async {
+  try {
+    await launcher.launchUrl(Uri.parse(url));
+  } catch (e) {
+    print('Error launching URL: $e');
   }
 }

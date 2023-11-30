@@ -5,6 +5,11 @@ import '../Widgets/Carousels/AthletesCarousel.dart';
 import '../Widgets/Carousels/TeamCarousel.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:level_app/models/user_model.dart';
+import 'package:level_app/models/team_player_model.dart';
+import 'package:level_app/api/firestore_requests.dart';
+import 'package:level_app/api/users_requests.dart';
 
 class UserProfileWidget extends StatefulWidget {
   const UserProfileWidget({Key? key}) : super(key: key);
@@ -16,30 +21,62 @@ class UserProfileWidget extends StatefulWidget {
 class _UserProfileWidgetState extends State<UserProfileWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String username = 'Andrew D.';
-  String bio = '';
-  String email = 'andrew@domainname.com';
-  
-  List _users = [];
-  List _teams = [];
-  List _athletes = [];
-  Object _myUser = {};
+  late Future<User> fetchedUser;
+  User user = User(
+    userId: "0",
+    name: "",
+    email: "",
+    teams: [],
+    players: [],
+    profile: "",
+    background: 0,
+  );
 
-  Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/testing_data/user_data.json');
-    final data = await json.decode(response);
+  var username = "";
+  var bio = "";
+  var email = "";
+
+  List<Team> fetchedTeams = [];
+  List<Player> fetchedPlayers = [];
+
+  Future<void> setData() async {
+    User fetchedUserData = await fetchedUser;
     setState(() {
-      _users = data["users"];
-      _myUser = _users[0];
-      _teams = _users[0]["teams"];
-      _athletes = _users[0]["athletes"];
+      user = fetchedUserData;
     });
+    fetchedTeams = await getTeamsByIds(user.teams);
+    fetchedPlayers = await getPlayersByIds(user.players);
+    setState(() {});
+  }
+
+  void _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      setState(() {
+        fetchedUser = getUserById(storedUserId);
+      });
+    }
+  }
+
+  Future<User> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    return getUserById(storedUserId);
   }
 
   @override
   void initState() {
     super.initState();
-    readJson();
+    _loadUserId();
+
+    getUser().then((User user) {
+      setState(() {
+        fetchedUser = Future.value(user);
+      });
+
+      setData();
+    });    
   }
 
   @override
@@ -92,7 +129,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              _users[0]["background"]
+                              user.profile,
                             ),
                           ),
                         ),
@@ -110,7 +147,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
-                                  _users[0]["profile"],
+                                  user.profile,
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -126,14 +163,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
                   child: Text(
-                    _users[0]["name"],
+                    user.name,
                     style: Theme.of(context).textTheme.headlineMedium, 
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
                   child: Text(
-                    _users[0]["email"],
+                    user.email,
                     style: Theme.of(context).textTheme.headlineSmall,  
                   ),
                 ),
@@ -151,9 +188,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                                   builder: (context) => EditProfile(
                                         onSave: (publicName, bio, email) {
                                           setState(() {
-                                            username = publicName;
-                                            this.bio = bio;
-                                            this.email = email;
+                                            username = user.name;
+                                            this.bio = "";
+                                            this.email = user.email;
                                           });
                                         },
                                       )));
@@ -226,7 +263,12 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         child: SizedBox(
                           width: double.infinity,
                           height: 149,
-                          child: TeamCarouselWidget(teams: _teams)
+                          child: fetchedTeams.isEmpty
+                            ? const Text(
+                                'You are not following any teams',
+                                style: TextStyle(fontSize: 16),
+                              )
+                            : TeamCarouselWidget(teams: fetchedTeams),
                         ),
                       ),
                     ],
@@ -268,7 +310,12 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                         child: SizedBox(
                           width: double.infinity,
                           height: 149,
-                          child: AthleteCarouselWidget(athletes: _athletes)
+                          child: fetchedPlayers.isEmpty
+                          ? const Text(
+                              'You are not following any athletes',
+                              style: TextStyle(fontSize: 16),
+                            )
+                          : AthleteCarouselWidget(athletes: fetchedPlayers),
                         ),
                       ),
                     ],

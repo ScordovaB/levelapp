@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
-
+  final String userId = 'TVR7vygHwtnekXtDL0P4';
   @override
   State<SignUp> createState() => _SignUpState();
 }
@@ -98,6 +98,7 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(
           builder: (context) => Nav(
             theme: Theme.of(context),
+            userId: widget.userId,
           ),
         ),
       );
