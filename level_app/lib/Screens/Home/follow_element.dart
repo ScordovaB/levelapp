@@ -45,7 +45,6 @@ class _FollowElemState extends State<FollowElem> {
       user = fetchedUserData;
     });
     setState(() {});
-    print("set data");
   }
 
   void _loadUserId() async {
