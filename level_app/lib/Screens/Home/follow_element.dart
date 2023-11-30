@@ -5,6 +5,7 @@ import 'package:level_app/api/users_requests.dart';
 import 'package:level_app/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:level_app/api/firestore_requests.dart';
+import 'dart:async';
 
 class FollowElem extends StatefulWidget {
   const FollowElem(
@@ -25,6 +26,8 @@ class FollowElem extends StatefulWidget {
 }
 
 class _FollowElemState extends State<FollowElem> {
+  Timer? _timer;
+
   late Future<User> fetchedUser;
   User user = User(
     userId: "0",
@@ -36,14 +39,13 @@ class _FollowElemState extends State<FollowElem> {
     background: 0,
   );
 
-  bool isFollowed = false;
-
   Future<void> setData() async {
     User fetchedUserData = await fetchedUser;
     setState(() {
       user = fetchedUserData;
     });
     setState(() {});
+    print("set data");
   }
 
   void _loadUserId() async {
@@ -72,8 +74,14 @@ class _FollowElemState extends State<FollowElem> {
       });
       setData();
     });
+     _timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setData());
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

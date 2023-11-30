@@ -11,6 +11,7 @@ import 'package:level_app/models/team_player_model.dart';
 import 'package:level_app/api/firestore_requests.dart';
 import 'package:level_app/api/users_requests.dart';
 import 'package:level_app/Screens/Widgets/SeeAll/seeAll.dart';
+import 'dart:async';
 
 class UserProfileWidget extends StatefulWidget {
   const UserProfileWidget({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class UserProfileWidget extends StatefulWidget {
 
 class _UserProfileWidgetState extends State<UserProfileWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Timer? _timer;
 
   late Future<User> fetchedUser;
   User user = User(
@@ -41,13 +43,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   List<Player> fetchedPlayers = [];
 
   Future<void> setData() async {
-    User fetchedUserData = await fetchedUser;
-    setState(() {
-      user = fetchedUserData;
-    });
-    fetchedTeams = await getTeamsByIds(user.teams);
-    fetchedPlayers = await getPlayersByIds(user.players);
-    setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      User fetchedUserData = await getUserById(storedUserId);
+      fetchedTeams = await getTeamsByIds(fetchedUserData.teams);
+      fetchedPlayers = await getPlayersByIds(fetchedUserData.players);
+      setState(() {
+        user = fetchedUserData;
+      });
+    }
   }
 
   void _loadUserId() async {
@@ -71,17 +76,17 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     super.initState();
     _loadUserId();
 
-    getUser().then((User user) {
-      setState(() {
-        fetchedUser = Future.value(user);
-      });
-
       setData();
-    });
+
+
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => setData());
+    
   }
 
   @override
   void dispose() {
+    super.dispose();
+    _timer?.cancel(); // Cancel the timer
     super.dispose();
   }
 
