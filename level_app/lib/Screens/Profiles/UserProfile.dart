@@ -129,7 +129,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              user.profile,
+                              "https://picsum.photos/id/${user.background}/367/267",
                             ),
                           ),
                         ),
@@ -148,7 +148,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
-                                  user.profile,
+                                  "https://picsum.photos/id/${user.profile}/100/100",
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -182,19 +182,27 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile(
-                                        onSave: (publicName, bio, email) {
-                                          setState(() {
-                                            username = user.name;
-                                            this.bio = "";
-                                            this.email = user.email;
-                                          });
-                                        },
-                                      )));
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfile(
+                                  profile: user.profile, userId: user.userId),
+                            ),
+                          );
+
+                          // Handle the result from the other page and trigger a reload
+                          if (result == true) {
+                            setState(() async {
+                              getUser().then((User user) {
+                                setState(() {
+                                  fetchedUser = Future.value(user);
+                                });
+
+                                setData();
+                              });
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,

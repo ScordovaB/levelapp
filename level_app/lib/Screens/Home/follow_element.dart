@@ -68,7 +68,8 @@ class _FollowElemState extends State<FollowElem> {
         fetchedUser = Future.value(user);
       });
       setData();
-    }); 
+    });
+    setData(); 
   }
 
   @override
