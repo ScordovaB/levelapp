@@ -7,7 +7,7 @@ Future<User> getUserById(String userId) async {
   DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
   Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
   return User(
-    id: data['id'],
+    id: data['userId'],
     name: data['name'],
     email: data['email'],
     teams: data['teams'],
