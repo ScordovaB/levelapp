@@ -24,9 +24,9 @@ class OBGreenPalette {
 
 class Nav extends StatefulWidget {
   final ThemeData theme;
-  final String userId;
+  
 
-  const Nav({Key? key, required this.theme, required this.userId}) : super(key: key);
+  const Nav({Key? key, required this.theme}) : super(key: key);
 
   @override
   State<Nav> createState() => _NavState();
@@ -45,7 +45,6 @@ class _NavState extends State<Nav> {
   @override
   void initState() {
     super.initState();
-    _saveUserId(widget.userId); // Save the userId to SharedPreferences
     _loadUserId();
   }
 
@@ -59,10 +58,6 @@ class _NavState extends State<Nav> {
     }
   }
 
-  void _saveUserId(String userId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userId', userId);
-  }
 
   @override
   Widget build(BuildContext context) {
