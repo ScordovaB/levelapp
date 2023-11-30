@@ -8,6 +8,9 @@ import 'package:level_app/Screens/Widgets/app_bar_home.dart';
 import 'package:level_app/api/api_service.dart';
 import 'package:level_app/api/firestore_requests.dart';
 import '../../models/team_player_model.dart';
+import 'package:level_app/api/users_requests.dart';
+import 'package:level_app/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -24,9 +27,44 @@ class _SearchPageState extends State<SearchPage> {
   late Future<List<Team>> teams;
   late Future<List<Player>> players;
 
+  late Future<User> fetchedUser;
+  User user = User(
+    userId: "0",
+    name: "",
+    email: "",
+    teams: [],
+    players: [],
+    profile: "",
+    background: 0,
+  );
+
+  Future<void> setData() async {
+    User fetchedUserData = await fetchedUser;
+    setState(() {
+      user = fetchedUserData;
+    });
+  }
+
+  void _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      setState(() {
+        fetchedUser = getUserById(storedUserId);
+      });
+    }
+  }
+
+  Future<User> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    return getUserById(storedUserId);
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadUserId();
     //loadJsonData();
     //profiles = jsonDecode(PROFILES);
     //filteredProfiles = List.from(profiles);
@@ -35,6 +73,14 @@ class _SearchPageState extends State<SearchPage> {
     fetchDataInList();
     //fetchDataAndStore(); // Uncomment to fetch data from API and store in Firestore
     //storeSampleData();
+
+    getUser().then((User user) {
+      setState(() {
+        fetchedUser = Future.value(user);
+      });
+      setData();
+    }); 
+
   }
 
   Future<void> fetchDataAndStore() async {
@@ -42,7 +88,7 @@ class _SearchPageState extends State<SearchPage> {
       List<Team> teams = await fetchFootballTeams(
           'https://v3.football.api-sports.io/teams?league=39&season=2023');
       List<Player> players = await fetchFootballPlayers(
-          'https://v3.football.api-sports.io/players?league=39&season=2023');
+          'https://v3.football.api-sports.io/players?league=39&season=2023&team=50', pageCount: 2);
       await storeTeams(teams);
       await storePlayers(players);
     } catch (e) {
@@ -106,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarHome(context),
+      appBar: appBarHome(context, user.name),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(15, 15, 15, 8),

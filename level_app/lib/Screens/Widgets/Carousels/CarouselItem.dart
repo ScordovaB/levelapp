@@ -30,6 +30,14 @@ Widget buildItem(BuildContext context, String imagePath, String teamName, int id
           child: Image.network(
             imagePath,
             fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+                return Image.network(
+                  'https://i.gifer.com/ZKZg.gif',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain,
+                );
+              },
           ),
         ),
         Text(

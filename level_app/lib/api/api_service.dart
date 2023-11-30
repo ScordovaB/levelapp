@@ -60,36 +60,44 @@ Future<void> storeTeams(List<Team> teams) async {
   }
 }
 
-Future<List<Player>> fetchFootballPlayers(String apiUrl) async {
-  final response = await http.get(
-    Uri.parse(apiUrl),
-    headers: {
-      'x-apisports-key': '317f95e694a938fc9bd1b887fd662abd', // Replace with your actual API key
-    },
-  );
+Future<List<Player>> fetchFootballPlayers(String apiUrl, {int pageCount = 1}) async {
+  List<Player> allPlayers = [];
 
-  if (response.statusCode == 200) {
-    Map<String, dynamic> responseData = json.decode(response.body);
-    print(responseData);
-    if (responseData.containsKey('response')) {
-      List<dynamic> playerList = responseData['response'];
-      return playerList.map<Player>((playerData) {
-        return Player(
-          id: playerData['player']['id'],
-          name: playerData['player']['name'],
-          sport: 'Football',
-          nationality: playerData['player']['nationality'],
-          photoUrl: playerData['player']['photo'],
-          background: playerData['statistics'][0]['team']['logo'],
-          teamId: playerData['statistics'][0]['team']['id'], // Assuming the team id is in the first statistics entry
-        );
-      }).toList();
+  for (int page = 1; page <= pageCount; page++) {
+    final response = await http.get(
+      Uri.parse('$apiUrl&page=$page'), // Assuming the API supports a 'page' query parameter
+      headers: {
+        'x-apisports-key': '317f95e694a938fc9bd1b887fd662abd', // Replace with your actual API key
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (responseData.containsKey('response')) {
+        List<dynamic> playerList = responseData['response'];
+
+        // Convert player data to Player objects and add to the overall list
+        allPlayers.addAll(playerList.map<Player>((playerData) {
+          return Player(
+            id: playerData['player']['id'],
+            name: playerData['player']['name'],
+            sport: 'Football',
+            nationality: playerData['player']['nationality'],
+            photoUrl: playerData['player']['photo'],
+            background: playerData['statistics'][0]['team']['logo'],
+            teamId: playerData['statistics'][0]['team']['id'],
+          );
+        }));
+      } else {
+        throw Exception('Invalid response format - missing "response" key');
+      }
     } else {
-      throw Exception('Invalid response format - missing "response" key');
+      throw Exception('Failed to load players');
     }
-  } else {
-    throw Exception('Failed to load players');
   }
+
+  return allPlayers;
 }
 Future<void> storePlayers(List<Player> players) async {
   try {
@@ -129,18 +137,28 @@ Future<List<Event>> fetchFootballEvents(String apiUrl) async {
         Map<String, dynamic> homeTeam = matchData['teams']['home'];
         Map<String, dynamic> awayTeam = matchData['teams']['away'];
 
+                // Handle null values for scores
+        int? scoreHome = matchData['goals']['home'];
+        int? scoreAway = matchData['goals']['away'];
+
+        // Check for null and assign default values if necessary
+        scoreHome ??= 0;  
+        scoreAway ??= 0;
+
         return Event(
           id: matchData['fixture']['id'],
           sport: 'Football',
           league: matchData['league']['name'],
           leagueImage: matchData['league']['logo'],
           homeTeam: homeTeam['name'],
+          homeTeamId: homeTeam['id'],
           homeTeamImage: homeTeam['logo'],
           awayTeam: awayTeam['name'],
+          awayTeamId: awayTeam['id'],
           awayTeamImage: awayTeam['logo'],
           timestamp: matchData['fixture']['timestamp'],
-          scoreHome: matchData['goals']['home'],
-          scoreAway: matchData['goals']['away'],
+          scoreHome: scoreHome,
+          scoreAway: scoreAway,
         );
       }).toList();
     } else {
@@ -161,8 +179,10 @@ Future<void> storeFootballEvents(List<Event> events) async {
         'league': event.league,
         'leagueImage': event.leagueImage,
         'homeTeam': event.homeTeam,
+        'homeTeamId': event.homeTeamId,
         'homeTeamImage': event.homeTeamImage,
         'awayTeam': event.awayTeam,
+        'awayTeamId': event.awayTeamId,
         'awayTeamImage': event.awayTeamImage,
         'timestamp': event.timestamp,
         'scoreHome': event.scoreHome,
