@@ -113,7 +113,7 @@ class _NextMatchesColumnState extends State<NextMatchesColumn> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
               child: Text(
-                'See all',
+                '',
                 textAlign: TextAlign.end,
                 style: TextStyle(
                   fontSize: 16,
