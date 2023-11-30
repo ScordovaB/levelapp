@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:level_app/Login/login.dart';
 import 'package:level_app/Login/main.dart';
@@ -7,19 +9,115 @@ import 'package:level_app/Login/termsAndConditions.dart';
 import 'package:level_app/navigation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/gestures.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
-  final String userId = 'TVR7vygHwtnekXtDL0P4';
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  bool _passwordVisible1 = false;
+  bool _passwordVisible2 = false;
+  bool _passwordIsConfirmed = false;
+  String _signupErrorMessage = '';
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController2 = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible1 = false;
+    _passwordVisible2 = false;
+    _passwordIsConfirmed = false;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordController2.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signup(Permission permission, BuildContext context) async {
+    try {
+      setState(() {
+        _signupErrorMessage = '';
+      });
+      if (_nameController.text.trim().isEmpty ||
+          _emailController.text.trim().isEmpty ||
+          _passwordController.text.trim().isEmpty ||
+          _passwordController2.text.trim().isEmpty) {
+        setState(() {
+          _signupErrorMessage = 'Please fill in all fields.';
+        });
+        return;
+      } else if (passwordIsConfirmed()) {
+        var existingUser = await FirebaseAuth.instance
+            .fetchSignInMethodsForEmail(_emailController.text.trim());
+
+        if (existingUser.isNotEmpty) {
+          setState(() {
+            _signupErrorMessage =
+                'An account already exists for this email. Please log in.';
+          });
+          return;
+        }
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+        checkPermission(permission, context);
+
+        userDetails(_nameController.text.trim(), _emailController.text.trim(),
+            _passwordController.text.trim());
+      }
+    } catch (e) {
+      setState(() {
+        _signupErrorMessage = e.toString();
+      });
+    }
+  }
+
+  Future userDetails(String name, String email, String password) async {
+    DocumentReference docRef =
+        await FirebaseFirestore.instance.collection('users').add({
+      'name': name,
+      'email': email,
+      'password': password,
+      'teams': [],
+      'players': [],
+      'userId': '',
+      'profile': "",
+      'background': 1,
+    });
+
+    String userId = docRef.id;
+    await docRef.update({
+      'userId': userId,
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userId', userId);
+
+    print('Local Storage: UserId: ${prefs.getString('userId')}');
+  }
+
+  bool passwordIsConfirmed() {
+    if (_passwordController.text.trim() == _passwordController2.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<void> checkPermission(
       Permission permission, BuildContext context) async {
     final status = await permission.request();
-    print(status);
     if (status.isGranted) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Permission granted")));
@@ -29,7 +127,6 @@ class _SignUpState extends State<SignUp> {
         MaterialPageRoute(
           builder: (context) => Nav(
             theme: Theme.of(context),
-            userId: widget.userId,
           ),
         ),
       );
@@ -121,6 +218,31 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _nameController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                icon: Icon(Icons.person),
+                                labelText: "Name / Nickname",
+                                iconColor: Colors.black,
+                                focusColor: Colors.green,
+                                fillColor: Colors.green,
+                                hoverColor: Colors.green,
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 9.0, horizontal: 15.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _emailController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.email),
@@ -142,14 +264,27 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           Expanded(
                             child: TextField(
-                              obscureText: true,
+                              controller: _passwordController,
+                              obscureText: !_passwordVisible1,
                               decoration: InputDecoration(
-                                icon: Icon(Icons.person_3_outlined),
-                                labelText: "Name",
+                                icon: Icon(Icons.lock_outline),
+                                labelText: "Password",
                                 iconColor: Colors.black,
                                 focusColor: Colors.green,
                                 fillColor: Colors.green,
                                 hoverColor: Colors.green,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible1
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible1 = !_passwordVisible1;
+                                    });
+                                  },
+                                ),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 9.0, horizontal: 15.0),
@@ -163,14 +298,27 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           Expanded(
                             child: TextField(
-                              obscureText: true,
+                              controller: _passwordController2,
+                              obscureText: !_passwordVisible2,
                               decoration: InputDecoration(
                                 icon: Icon(Icons.lock_outline),
-                                labelText: "Password",
+                                labelText: "Confirm password",
                                 iconColor: Colors.black,
                                 focusColor: Colors.green,
                                 fillColor: Colors.green,
                                 hoverColor: Colors.green,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible2
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible2 = !_passwordVisible2;
+                                    });
+                                  },
+                                ),
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 9.0, horizontal: 15.0),
@@ -219,7 +367,7 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              checkPermission(Permission.notification, context);
+                              _signup(Permission.notification, context);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green[800],
@@ -248,6 +396,26 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           SizedBox(height: 10.0),
+                          if (_signupErrorMessage.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                _signupErrorMessage,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          SizedBox(height: 10.0),
+                          if ((_passwordController.text.trim() !=
+                                  _passwordController2.text.trim()) &
+                              (_passwordController.text.trim() != '') &
+                              (_passwordController2.text.trim() != ''))
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Password is not the same',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
                           TextButton(
                             onPressed: () {
                               Navigator.push(

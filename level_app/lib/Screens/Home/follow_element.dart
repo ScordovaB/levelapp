@@ -5,9 +5,16 @@ import 'package:level_app/api/users_requests.dart';
 import 'package:level_app/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:level_app/api/firestore_requests.dart';
+import 'dart:async';
 
 class FollowElem extends StatefulWidget {
-  const FollowElem({Key? key, required this.image, required this.name, required this.id, required this.team}) : super(key: key);
+  const FollowElem(
+      {Key? key,
+      required this.image,
+      required this.name,
+      required this.id,
+      required this.team})
+      : super(key: key);
 
   final String image;
   final String name;
@@ -19,6 +26,8 @@ class FollowElem extends StatefulWidget {
 }
 
 class _FollowElemState extends State<FollowElem> {
+  Timer? _timer;
+
   late Future<User> fetchedUser;
   User user = User(
     userId: "0",
@@ -30,15 +39,10 @@ class _FollowElemState extends State<FollowElem> {
     background: 0,
   );
 
-  bool isFollowed = false;
-
   Future<void> setData() async {
     User fetchedUserData = await fetchedUser;
     setState(() {
       user = fetchedUserData;
-      isFollowed = widget.team
-            ? user.teams.contains(widget.id)
-            : user.players.contains(widget.id);
     });
     setState(() {});
   }
@@ -68,19 +72,30 @@ class _FollowElemState extends State<FollowElem> {
         fetchedUser = Future.value(user);
       });
       setData();
-    }); 
+    });
+     _timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setData());
+    setData();
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => widget.team ? TeamProfileWidget(id: widget.id,) : AthleteProfileWidget(id: widget.id),
-        ),
-      );
+          context,
+          MaterialPageRoute(
+            builder: (context) => widget.team
+                ? TeamProfileWidget(
+                    id: widget.id,
+                  )
+                : AthleteProfileWidget(id: widget.id),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -99,20 +114,21 @@ class _FollowElemState extends State<FollowElem> {
                     widget.image,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      'https://i.gifer.com/ZKZg.gif',
-                      width: 100,
-                      height: 50,
-                      fit: BoxFit.contain,
-                    );
-                  },
+                      return Image.network(
+                        'https://i.gifer.com/ZKZg.gif',
+                        width: 100,
+                        height: 50,
+                        fit: BoxFit.contain,
+                      );
+                    },
                   ),
                 ),
                 SizedBox(
                   width: 55,
                   child: Text(
                     widget.name,
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 10, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                   ),
@@ -124,8 +140,8 @@ class _FollowElemState extends State<FollowElem> {
               right: -10,
               child: IconButton(
                 onPressed: () {
-                  if(widget.team) {
-                    if (isFollowed) {
+                  if (widget.team) {
+                    if (user.teams.contains(widget.id)) {
                       removeTeamFromUser(user.userId, widget.id).then((value) {
                         setState(() {
                           user.teams.remove(widget.id);
@@ -137,10 +153,11 @@ class _FollowElemState extends State<FollowElem> {
                           user.teams.add(widget.id);
                         });
                       });
-                    }                    
+                    }
                   } else {
-                    if (isFollowed) {
-                      removePlayerFromUser(user.userId, widget.id).then((value) {
+                    if (user.players.contains(widget.id)) {
+                      removePlayerFromUser(user.userId, widget.id)
+                          .then((value) {
                         setState(() {
                           user.players.remove(widget.id);
                         });
@@ -155,7 +172,10 @@ class _FollowElemState extends State<FollowElem> {
                   }
                 },
                 icon: Icon(
-                  user.players.contains(widget.id) || user.teams.contains(widget.id) ? Icons.remove_circle : Icons.add_circle,
+                  (user.players.contains(widget.id) && !widget.team) ||
+                          (user.teams.contains(widget.id) && widget.team)
+                      ? Icons.remove_circle
+                      : Icons.add_circle,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),

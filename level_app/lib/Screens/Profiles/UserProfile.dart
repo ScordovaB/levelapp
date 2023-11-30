@@ -10,6 +10,8 @@ import 'package:level_app/models/user_model.dart';
 import 'package:level_app/models/team_player_model.dart';
 import 'package:level_app/api/firestore_requests.dart';
 import 'package:level_app/api/users_requests.dart';
+import 'package:level_app/Screens/Widgets/SeeAll/seeAll.dart';
+import 'dart:async';
 
 class UserProfileWidget extends StatefulWidget {
   const UserProfileWidget({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class UserProfileWidget extends StatefulWidget {
 
 class _UserProfileWidgetState extends State<UserProfileWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Timer? _timer;
 
   late Future<User> fetchedUser;
   User user = User(
@@ -40,13 +43,16 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   List<Player> fetchedPlayers = [];
 
   Future<void> setData() async {
-    User fetchedUserData = await fetchedUser;
-    setState(() {
-      user = fetchedUserData;
-    });
-    fetchedTeams = await getTeamsByIds(user.teams);
-    fetchedPlayers = await getPlayersByIds(user.players);
-    setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedUserId = prefs.getString('userId') ?? '';
+    if (storedUserId.isNotEmpty) {
+      User fetchedUserData = await getUserById(storedUserId);
+      fetchedTeams = await getTeamsByIds(fetchedUserData.teams);
+      fetchedPlayers = await getPlayersByIds(fetchedUserData.players);
+      setState(() {
+        user = fetchedUserData;
+      });
+    }
   }
 
   void _loadUserId() async {
@@ -70,17 +76,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     super.initState();
     _loadUserId();
 
-    getUser().then((User user) {
-      setState(() {
-        fetchedUser = Future.value(user);
-      });
-
       setData();
-    });    
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => setData());
   }
 
   @override
   void dispose() {
+    super.dispose();
+    _timer?.cancel(); // Cancel the timer
     super.dispose();
   }
 
@@ -105,7 +108,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           ),
           title: Text(
             'My Profile',
-            style: Theme.of(context).textTheme.titleLarge, 
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: const [],
           centerTitle: false,
@@ -129,7 +132,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                              user.profile,
+                              "https://picsum.photos/id/${user.background}/367/267",
                             ),
                           ),
                         ),
@@ -137,7 +140,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                       Align(
                         alignment: const AlignmentDirectional(-1.00, 1.00),
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 16),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              24, 0, 0, 16),
                           child: SizedBox(
                             width: 90,
                             height: 90,
@@ -147,7 +151,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
-                                  user.profile,
+                                  "https://picsum.photos/id/${user.profile}/100/100",
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -164,14 +168,14 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 0, 0),
                   child: Text(
                     user.name,
-                    style: Theme.of(context).textTheme.headlineMedium, 
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(24, 4, 0, 16),
                   child: Text(
                     user.email,
-                    style: Theme.of(context).textTheme.headlineSmall,  
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 Padding(
@@ -181,22 +185,30 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile(
-                                        onSave: (publicName, bio, email) {
-                                          setState(() {
-                                            username = user.name;
-                                            this.bio = "";
-                                            this.email = user.email;
-                                          });
-                                        },
-                                      )));
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfile(
+                                  profile: user.profile, userId: user.userId),
+                            ),
+                          );
+
+                          // Handle the result from the other page and trigger a reload
+                          if (result == true) {
+                            setState(() async {
+                              getUser().then((User user) {
+                                setState(() {
+                                  fetchedUser = Future.value(user);
+                                });
+
+                                setData();
+                              });
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor, 
+                          backgroundColor: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(38),
                           ),
@@ -236,19 +248,34 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Teams',
-                        style: Theme.of(context).textTheme.titleSmall, 
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
-                      child: Text(
-                        'See all',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontFamily: 'Readex Pro',
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
+
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SeeAll(
+                                  profiles: fetchedTeams,
+                                  isTeam: true,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'See all',
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontFamily: 'Readex Pro',
+                              color: Theme.of(context).hintColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                          )),
                     ),
                   ],
                 ),
@@ -264,11 +291,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           width: double.infinity,
                           height: 149,
                           child: fetchedTeams.isEmpty
-                            ? const Text(
-                                'You are not following any teams',
-                                style: TextStyle(fontSize: 16),
-                              )
-                            : TeamCarouselWidget(teams: fetchedTeams),
+                              ? const Text(
+                                  'You are not following any teams',
+                                  style: TextStyle(fontSize: 16),
+                                )
+                              : TeamCarouselWidget(teams: fetchedTeams),
                         ),
                       ),
                     ],
@@ -283,19 +310,33 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                       child: Text(
                         'Followed Athletes',
-                        style: Theme.of(context).textTheme.titleSmall, 
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 16, 16),
-                      child: Text(
-                        'See all',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontFamily: 'Readex Pro',
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 16, 16, 16),
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SeeAll(
+                                  profiles: fetchedPlayers,
+                                  isTeam: false,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'See all',
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontFamily: 'Readex Pro',
+                              color: Theme.of(context).hintColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                          )),
                     ),
                   ],
                 ),
@@ -311,11 +352,11 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                           width: double.infinity,
                           height: 149,
                           child: fetchedPlayers.isEmpty
-                          ? const Text(
-                              'You are not following any athletes',
-                              style: TextStyle(fontSize: 16),
-                            )
-                          : AthleteCarouselWidget(athletes: fetchedPlayers),
+                              ? const Text(
+                                  'You are not following any athletes',
+                                  style: TextStyle(fontSize: 16),
+                                )
+                              : AthleteCarouselWidget(athletes: fetchedPlayers),
                         ),
                       ),
                     ],

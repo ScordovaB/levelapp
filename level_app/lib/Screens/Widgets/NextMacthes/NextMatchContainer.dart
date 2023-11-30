@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class NextMatchContainer extends StatelessWidget {
   final String date;
   final String team1Image;
   final String team2Image;
+  final String teamName1;
+  final String teamName2;
 
   NextMatchContainer({
     required this.date,
     required this.team1Image,
     required this.team2Image,
+    required this.teamName1,
+    required this.teamName2,
   });
   // @override
   // void initState() {
   //   print(team1Image);
   //   print(team2Image);
   // }
+  Future<void> _launchURL(String url) async {
+  try {
+    await launcher.launchUrl(Uri.parse(url));
+  } catch (e) {
+    print('Error launching URL: $e');
+  }
+}
+  
 
   @override
   Widget build(BuildContext context) {
@@ -84,18 +97,21 @@ class NextMatchContainer extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: AlignmentDirectional(0.88, -0.08),
+            alignment: const AlignmentDirectional(0.88, -0.08),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                String url = "https://www.google.com/search?q=$teamName1+vs+$teamName2"; ///search?q=Manchester+United+vs+Everton
+                _launchURL(url);
+              },
               style: ElevatedButton.styleFrom(
-                primary: Colors.greenAccent,
-                padding: EdgeInsets.symmetric(horizontal: 5),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 elevation: 3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'More Info',
                 style: TextStyle(
                   fontSize: 16,

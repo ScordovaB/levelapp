@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1026547800577",
+    "firebase_url": "https://levelapp-c2368-default-rtdb.firebaseio.com",
     "project_id": "levelapp-c2368",
     "storage_bucket": "levelapp-c2368.appspot.com"
   },
@@ -12,7 +13,12 @@
           "package_name": "com.example.level_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1026547800577-7nlnp50f5e38t5ddrbjsvf5843m1ojkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBQ83bHZm5rqYfYLBxXl46LqU65_XZndn0"
@@ -20,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026547800577-7nlnp50f5e38t5ddrbjsvf5843m1ojkr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1026547800577-c26jptcd7b1l2v3532pv0e52a8ed9o28.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.levelApp.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }
