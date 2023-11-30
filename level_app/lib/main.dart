@@ -6,9 +6,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:level_app/theme/bloc/theme_bloc.dart';
 import 'firebase_options.dart';
+import 'package:level_app/Screens/Events/event_home.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initNotifications();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Level App',
           theme: state.themeData,
-          home: const LoginHome(title: "LoginHome"),
+          home: const LoginHome(),
           debugShowCheckedModeBanner: false,
         );
       },

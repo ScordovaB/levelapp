@@ -214,3 +214,15 @@ Future<List<Event>> getEventsForTeam(int teamId) async {
 
   return teamEvents;
 }
+
+Future<void> updateProfileToUser(String userId, String profile) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  await userRef.update({'profile': profile});
+}
+
+Future<void> updateBackgroundToUser(String userId, int bg) async {
+  DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+  await userRef.update({'background': bg});
+}

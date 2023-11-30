@@ -74,6 +74,7 @@ class _FollowElemState extends State<FollowElem> {
       setData();
     });
      _timer = Timer.periodic(Duration(seconds: 5), (Timer t) => setData());
+    setData();
   }
 
   @override
