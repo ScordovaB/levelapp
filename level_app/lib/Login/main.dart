@@ -31,13 +31,6 @@ class LoginHome extends StatefulWidget {
 }
 
 class _LoginHomeState extends State<LoginHome> {
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
   Future userDetails(String name, String email, String password) async {
     await FirebaseFirestore.instance.collection('users').add({
       'name': name,
@@ -47,52 +40,6 @@ class _LoginHomeState extends State<LoginHome> {
       'players': {},
       'userId': ''
     });
-  }
-
-  Future<void> _handleGoogleSignIn() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        await FirebaseAuth.instance.signInWithCredential(credential);
-
-        String email =
-            googleUser.email; // El correo electrónico siempre está disponible
-        var usersCollection = FirebaseFirestore.instance.collection('users');
-        var docSnapshot = await usersCollection.doc(email).get();
-
-        if (!docSnapshot.exists) {
-          String name = googleUser.displayName ?? 'Common User';
-
-          await usersCollection.doc(email).set({
-            'name': name,
-            'email': email,
-            'password': 'googleAUTH',
-            'players': {},
-            'teams': {}
-          });
-        }
-
-        // Navegar a la pantalla principal después de la autenticación exitosa
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Nav(
-              theme: Theme.of(context),
-            ),
-          ),
-        );
-      }
-    } catch (error) {
-      print(error);
-    }
   }
 
   @override
@@ -106,13 +53,13 @@ class _LoginHomeState extends State<LoginHome> {
                 Image.asset(
                   'assets/images/login/login_home.jpg',
                   fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / 1.5,
                   width: MediaQuery.of(context).size.width,
                 ),
                 Image.asset(
                   'assets/images/login/white_gradient.png',
                   fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / 1.5,
                   width: MediaQuery.of(context).size.width,
                 ),
                 Positioned(
@@ -186,56 +133,8 @@ class _LoginHomeState extends State<LoginHome> {
                         ),
                         SizedBox(height: 15.0),
                         Text(
-                          'Or use social media',
+                          'Already have an account?',
                           style: TextStyle(fontSize: 14.0),
-                        ),
-                        SizedBox(height: 15.0),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _handleGoogleSignIn();
-                              /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Nav(
-                                    theme: Theme.of(context),
-                                    userId: widget.userId,
-                                  ),
-                                ),
-                              );*/
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                vertical: 20.0,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Icon(
-                                    Icons.g_translate,
-                                    size: 20.0,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0),
-                                Text(
-                                  'Sign in with Google',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                         SizedBox(height: 15.0),
                         SizedBox(
@@ -245,14 +144,12 @@ class _LoginHomeState extends State<LoginHome> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Nav(
-                                    theme: Theme.of(context),
-                                  ),
+                                  builder: (context) => Login(),
                                 ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.blue[900],
+                              primary: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
@@ -266,16 +163,16 @@ class _LoginHomeState extends State<LoginHome> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Icon(
-                                    Icons.facebook_outlined,
-                                    size: 20.0,
+                                    Icons.person,
+                                    size: 25.0,
                                     color: Colors.white,
                                   ),
                                 ),
                                 SizedBox(width: 10.0),
                                 Text(
-                                  'Sign in with Facebook',
+                                  'Log in',
                                   style: TextStyle(
-                                    fontSize: 18.0,
+                                    fontSize: 21.0,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -283,33 +180,6 @@ class _LoginHomeState extends State<LoginHome> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 25.0),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Login(),
-                              ),
-                            );
-                          },
-                          child: Text.rich(
-                            TextSpan(
-                              text: 'Already have an account? ',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'Log in!',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ],
